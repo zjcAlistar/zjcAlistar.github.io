@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>竺俊超的个人主页</title>
+<style type="text/css">
+a{TEXT-DECORATION:none}
+a:hover{TEXT-DECORATION:underline}
+#backpic{
+	position:fixed;
+	top:0px;
+	left:0px;
+	z-index:1;
+	height:100%;
+	width:100%;
+}
+#backpic img{
+	height:100%;
+	width:100%;
+	min-height:600px;
+	min-width:1000px;
+}
+#front{
+	position:absolute;
+	z-index:2;
+	top:50px;
+	left:15%;
+	height:200px;
+	width:70%;
+	min-width:600px;
+}
+#shade{
+	position:absolute;
+	z-index:3;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	border-radius:30px;
+	border:0px solid #FFF;
+	background:white;
+	filter:alpha(opacity=60);
+	-moz-opacity:0.6;
+	opacity:0.6;
+}
+#intro{
+	position:absolute;
+	z-index:3;
+	top:36%;
+	right:5%;
+	font-size:20px;
+	font-family:微软雅黑;
+	color:black;
+}
+#introcontent{
+	position: absolute;
+	z-index: 3;
+	top: 56%;
+	right:5%;
+	font-size:16px;
+	font-family:微软雅黑;
+	color:black;
+}
+#motto{
+	position: absolute;
+	z-index: 3;
+	top:5%;
+	left:160px;
+	font-size:30px;
+	font-family:微软雅黑;
+	color:black;
+}
+#maintable{
+	position:absolute;
+	z-index:2;
+	top:300px;
+	left:15%;
+	height:2000px;
+	width:70%;
+	min-width:600px;
+}
+#hwcontent{
+	position: absolute;
+	z-index: 4;
+	top:0px;
+	left:0px;
+}
+#subtitle{
+	margin-left:20px;
+	font-size:28px;
+	font-family:微软雅黑;
+	color:black;
+}
+#diarytitle{
+	margin-left:20px;
+	font-size:24px;
+	font-family:微软雅黑;
+	color:black;
+}
+#diary{
+	margin-left:40px;
+	margin-right:40px;
+	line-height:40px;
+	font-size:20px;
+	font-family:微软雅黑;
+	color:black;
+}
+#photo{
+	position:absolute;
+	z-index:4;
+	left:3%;
+	top:40px;
+	display:inline-block;
+	width:120px;
+	height:120px;
+	border-radius:60px;
+	border:0px solid #FFF;
+	overflow:hidden;
+	box-shadow:0 0 20px #ccc;
+}
+#photo img{
+	width:100%;
+	min-height:100%; 
+	text-align:center;
+}
+</style>
+</head>
+
+<body>
+<div id="backpic">
+	<img src="https://zjcAlistar.github.io/images/universe.jpg"/>
+</div>
+
+
+<div id="front">
+  <div id="shade"></div>
+    <div id="photo">
+      <img src="https://zjcAlistar.github.io/images/myphoto.jpg" />
+    </div>
+    <p id="intro">个人信息</p>
+    <p id="introcontent">竺俊超 清华大学软件学院31班<br/>邮箱zhujunchao3311@gmail.com<br/></p>
+    <p id="motto">一句真话<br/>能比整个世界的分量还重</p>
+</div>
+<div id="maintable">
+	<div id="shade"></div>
+   		 <div id="hwcontent">
+        	<h2 id="subtitle">作业展示区</h2>
+            <h3 id="diarytitle">第二次作业</h3>
+            <h4 id="diary"><p>基础练习1:<br/>第一种是定义了一个名为foo的函数，第二种是定义了一个匿名的function再把它赋给变量foo。前者相当于直接声明了一个名为foo的function，后者则相当于把一个function的地址赋给foo变量。二者在被调用的时候比如foo();时并没有太大区别，但是实际上在预编译时，第一种的函数声明会被提前，而第二种只会把变量的声明提前，并不会立刻把值赋给变量，因此如果在这两种声明之前分别写上typeof foo，前者会返回function，后者为undefined。由于这种特性，在对相应函数重定义时也会有一定的区别，前者在预编译时就会将重定义的部分进行处理，而后者则是在代码运行时逐个处理。<br/><br/>
+基础练习2：<br/>会返回’function’，因为这个式子表示定义了一个function f并且立刻执行，其参数为另一个function，并返回这个function返回值的类型。在作为参数的function中，虽然return bar被写在靠前位置，但在预编译时，function bar(){}会被提前，因此会返回一个function，所以会显示’function’。<br/><br/>
+基础练习3：<br/>返回值是’undefined’,这个式子的后部定义了一个匿名函数并且立刻执行，其返回值为传进去的第一个参数的运行后返回结果的类型。这里传的参数是另一个对象foo下的bar函数，虽然该函数的返回值为this.baz，是一个number型，但是this指的是调用函数的那个对象，在题给式子中this指的并不是foo这个对象，而是arguments，因此没有baz这个变量，返回undefined。<br/>想输出number，可以将代码return arguments[0]();部分改写为：return typeof arguments[0].call(foo);或者改写为return typeof arguments[0].apply(foo);也可以改写为return typeof arguments[0].bind(foo)();通过这样指定this的作用范围，可以使this正确地指到foo。<br/><br/>基础练习4：<br/>a[1]为undefined，a[2]为5。因为虽然a和b都指向了一个数组对象，但通过a=b这一句，实际上只是把a指向的数组对象改为b所指向的这一个，并没有把b[2]赋给a[2]，a[1]此时相当于b[1]，并没有定义，因此为undefined。<br/><br/>
+基础练习5：<br/>实际的排序是[-1,-2,-3,1, 1048575,2,3,”test”]，因为Array下的sort函数实际上是按照字符串匹配的方式而不是整型数据的方式来排序，即是按照字符串首字母的编码大小从小到大进行排序的。欲使其正确地进行排序，可以在sort中传入一个参数：function(x,y){if(x>y){return 1;}else{return -1;}}，这样就会得到正确的结果，即["test", -3, -2, -1, 1, 2, 3, 1048575]。<br/><br/>
+进阶练习1：<br/>实现思路:利用arguments遍历传进sum的参数，对每个参数的类型进行辨认，将数字类型的进行浮点数相加，对boolean型的则依其为true或false分别加1或0，其余类型的跳过。浮点数相加时采用先转成字符串，再依据小数点的位置将两个浮点数的小数点向后移动，转为整数后相加，再除以扩大的倍数。<br/><br/> 
+进阶练习2：<br/><br/>	实现思路：利用Array自带的sort函数可以改变排序的规则的特性，将其比较函数改为由数组内每一个对象的name，age和score来决定，依据多关键字排序的规则，可以得到实现方法。
+</p></h4>
+        </div>
+</div>
+</body>
+
+</html>
