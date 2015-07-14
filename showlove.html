@@ -283,6 +283,8 @@ var data={
         }
     ]
 }
+var iLon = 0;
+var iLat = 0;
 var fname = 0;
 var commentId = 0;
 var lineId = 1;
@@ -315,7 +317,8 @@ function insertBox(line,imgroute){
 	temploccont.setAttribute('class','loccont');
 	temploc.setAttribute('class','loc');
 
-	var tempname = 'pic'+picnum.toString();
+	var tpicnum = picnum-1;
+	var tempname = 'pic'+tpicnum.toString();
 	tempimg.setAttribute('name',tempname);
 	tempimg.src=imgroute;
 	tempimg.addEventListener('click',function(){showLarge(imgroute);},false);
@@ -332,7 +335,7 @@ function showThree(){
 	var tempLine;
 	for(var i=1; i<=3; i++){
 		tempLine = document.getElementById(getLineId(i));
-		getJason();
+		getJsonfname();
 		var route = "http://zjcAlistar.github.io/pic/"+fname;
 		insertBox(tempLine,route);
 	}
@@ -372,7 +375,7 @@ window.onscroll=function(){
 		L2 = document.getElementById('line2');
 		L3 = document.getElementById('line3');
 		Lmin = getMinL(L1,L2,L3);
-		getJason();
+		getJsonfname();
 		insertBox(Lmin,"http://zjcAlistar.github.io/pic/"+fname);
 		state.innerText="加载成功";
 	}
@@ -424,8 +427,15 @@ function getLocation(){
   	}
 }
 function showPosition(position){
-  	pos.innerHTML="Latitude: " + position.coords.latitude +
- 				"<br />Longitude: " + position.coords.longitude;
+	getJsonloc(pos.parentNode.firstChild);
+	var LonA = position.coords.longitude;
+	var LatA = position.coords.latitude;
+	LatA = 90-LatA;
+	iLat = 90-iLat;
+	var tempC = Math.sin(LatA/180*Math.PI)*Math.sin(iLat/180*Math.PI)*Math.cos(LonA/180*Math.PI-iLon/180*Math.PI) + Math.cos(LatA/180*Math.PI)*Math.cos(iLon/180*Math.PI);
+
+	var distance = parseInt(6371.004*Math.acos(C));
+  	pos.innerHTML="该图片距离你：" +"<br />" + distance + "千米";
 }
 
 
@@ -448,7 +458,9 @@ function loadComment(num,Obj)
 	xmlhttp.send();
 }
 
-function getJason()
+
+
+function getJsonfname()
 {
 	var xmlhttp;
 	xmlhttp=new XMLHttpRequest();
@@ -460,6 +472,26 @@ function getJason()
     		fname = picdata.pic[picnum].name;
     		picnum += 1;
 			picnum = picnum%(picdata.pic.length);
+    	}
+  	}
+  	xmlhttp.open("GET","http://zjcAlistar.github.io/pictureinfo.json",false);
+	xmlhttp.send();
+}
+
+function getJsonloc(Obj)
+{
+	var xmlhttp;
+	xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function(){
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+  			var str = xmlhttp.responseText;
+
+    		var picdata = new Object();
+    		picdata = eval("("+str+")");
+
+    		var num = parseInt(Obj.name.substring(3));
+    		iLat = picdata.pic[num].iLatitude;
+    		iLon = picdata.pic[num].iLongitude;
     	}
   	}
   	xmlhttp.open("GET","http://zjcAlistar.github.io/pictureinfo.json",false);
