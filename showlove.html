@@ -283,6 +283,7 @@ var data={
         }
     ]
 }
+var fname = 0;
 var commentId = 0;
 var lineId = 1;
 var picnum = 0;
@@ -330,10 +331,9 @@ function showThree(){
 	var tempLine;
 	for(var i=1; i<=3; i++){
 		tempLine = document.getElementById(getLineId(i));
-		var picdata = getJason();
-		insertBox(tempLine,"http://zjcAlistar.github.io/pic/"+picdata.pic[picnum].name);
-		picnum += 1;
-		picnum = picnum%(picdata.pic.length);
+		getJason();
+		var route = "http://zjcAlistar.github.io/pic/"+fname;
+		insertBox(tempLine,route);
 	}
 }
 
@@ -371,11 +371,8 @@ window.onscroll=function(){
 		L2 = document.getElementById('line2');
 		L3 = document.getElementById('line3');
 		Lmin = getMinL(L1,L2,L3);
-
-		var picdata = getJason();
-		insertBox(Lmin,"http://zjcAlistar.github.io/pic/"+picdata.pic[picnum].name);
-		picnum += 1;
-		picnum = picnum%(picdata.pic.length);
+		getJason();
+		insertBox(Lmin,"http://zjcAlistar.github.io/pic/"+fname);
 		state.innerText="加载成功";
 	}
 }
@@ -455,8 +452,12 @@ function getJason()
 	xmlhttp=new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function(){
   		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-    		var picdata = eval(xmlhttp.responseText);
-    		return picdata;
+  			var str = xmlhttp.responseText;
+    		var picdata = new Object();
+    		picdata = eval("("+str+")");
+    		fname = picdata.pic[picnum].name;
+    		picnum += 1;
+			picnum = picnum%(picdata.pic.length);
     	}
   	}
   	xmlhttp.open("GET","http://zjcAlistar.github.io/pictureinfo.json",false);
