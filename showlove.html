@@ -319,7 +319,7 @@ function insertBox(line,imgroute){
 	tempimg.src=imgroute;
 	tempimg.addEventListener('click',function(){showLarge(imgroute);},false);
 	temploc.innerText = "显示距离";
-	temploc.addEventListener('click',function(){clickloc(tempimg);},false);
+	temploc.addEventListener('click',function(){clickloc(temploccont);},false);
 
 	line.appendChild(tempbox);
 	tempbox.appendChild(tempimg);
