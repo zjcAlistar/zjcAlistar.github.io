@@ -418,7 +418,6 @@ function cleanmask(Obj){
 
 
 function getLocation(){
-	alert(1);
   	if (navigator.geolocation){
     	navigator.geolocation.getCurrentPosition(showPosition);
     }
@@ -432,8 +431,7 @@ function showPosition(position){
 	var LatA = position.coords.latitude;
 	LatA = 90-LatA;
 	iLat = 90-iLat;
-	var tempC = Math.sin(LatA/180*Math.PI)*Math.sin(iLat/180*Math.PI)*Math.cos(LonA/180*Math.PI-iLon/180*Math.PI) + Math.cos(LatA/180*Math.PI)*Math.cos(iLon/180*Math.PI);
-
+	var tempC = Math.sin(LatA/180*Math.PI)*Math.sin(iLat/180*Math.PI)+Math.cos(LatA*Math.PI/180)*Math.cos(iLat*Math.PI/180)*Math.cos((LonA-iLon)*Math.PI/180);
 	var distance = parseInt(6371.004*Math.acos(tempC));
   	pos.innerHTML="该图片距离你：" +"<br />" + distance + "千米";
 }
