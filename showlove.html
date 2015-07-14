@@ -320,6 +320,7 @@ function insertBox(line,imgroute){
 	var tpicnum = picnum-1;
 	var tempname = 'pic'+tpicnum.toString();
 	tempimg.setAttribute('name',tempname);
+	tempimg.setAttribute('alt','该图加载失败');
 	tempimg.src=imgroute;
 	tempimg.addEventListener('click',function(){showLarge(imgroute);},false);
 	temploc.innerText = "显示距离";
@@ -375,6 +376,7 @@ window.onscroll=function(){
 		L2 = document.getElementById('line2');
 		L3 = document.getElementById('line3');
 		Lmin = getMinL(L1,L2,L3);
+		alert(1);
 		getJsonfname();
 		insertBox(Lmin,"http://zjcAlistar.github.io/pic/"+fname);
 		state.innerText="加载成功";
