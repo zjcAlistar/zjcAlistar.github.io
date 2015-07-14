@@ -287,6 +287,7 @@ var fname = 0;
 var commentId = 0;
 var lineId = 1;
 var picnum = 0;
+var pos=0;
 function getLineId(num){
 	if (num===1) {
 		return "line1";
@@ -319,7 +320,7 @@ function insertBox(line,imgroute){
 	tempimg.src=imgroute;
 	tempimg.addEventListener('click',function(){showLarge(imgroute);},false);
 	temploc.innerText = "显示距离";
-	temploc.addEventListener('click',function(){clickloc(temploccont);},false);
+	temploc.addEventListener('click',function(){pos=temploccont;getLocation();},false);
 
 	line.appendChild(tempbox);
 	tempbox.appendChild(tempimg);
@@ -412,20 +413,21 @@ function cleanmask(Obj){
 	commentId=0;
 }
 
-function clickloc(Obj){
-	function getLocation(){
-  		if (navigator.geolocation){
-    		navigator.geolocation.getCurrentPosition(showPosition);
-    	}
-  		else{
-  			Obj.innerHTML="Geolocation is not supported by this browser.";
-  		}
-  	}
-	function showPosition(position){
-  	Obj.innerHTML="Latitude: " + position.coords.latitude +
- 					"<br />Longitude: " + position.coords.longitude;
+
+function getLocation(){
+	alert(1);
+  	if (navigator.geolocation){
+    	navigator.geolocation.getCurrentPosition(showPosition);
+    }
+  	else{
+  		pos.innerHTML="Geolocation is not supported by this browser.";
   	}
 }
+function showPosition(position){
+  	pos.innerHTML="Latitude: " + position.coords.latitude +
+ 				"<br />Longitude: " + position.coords.longitude;
+}
+
 
 function loadComment(num,Obj)
 {
