@@ -1,0 +1,490 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>基础实验4：瀑布流</title>
+<meta charset="utf-8">
+<style type="text/css">
+body{
+	background:url("http://zjcAlistar.github.io/pic/back.jpg") repeat;
+}
+#mtitle h1{
+	text-align:center;
+	font-size:60px;
+	font-family:'Microsoft YaHei'
+}
+#mtitle h2{
+	text-align:center;
+	font-size:20px;
+	font-family:'simsun'
+}
+#state{
+	position: fixed;
+	left: 10px;
+	top: 10px;
+	text-align:center;
+	font-size:15px;
+	font-family:'Microsoft YaHei'
+}
+#wrap{
+	overflow:hidden;
+	margin-left: auto;
+	margin-right: auto;
+	width: 1000px;
+	height: auto
+}
+#wrap #line1,#line2{
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 50px;
+	width: 300px;
+	height: auto;
+	float: left;
+}
+#wrap #line3{
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	width: 300px;
+	height: auto;
+	float: left;
+}
+#wrap .box{
+	overflow:hidden;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 20px;
+	width: 100%;
+	height: auto;
+	border-radius: 15px;
+	background-color: #CDCDCD
+}
+.box .pic{
+	margin-top: 0px;
+	width: 100%;
+	height: auto;
+}
+.loccont{
+	margin-top: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+	height: 50px;
+	background-color: white;
+}
+.loc{
+	margin-top: 5px;
+	margin-left: 105px;
+	margin-right: 105px;
+	width: 90px;
+	border-radius: 5px;
+	background-color: white;
+}
+
+.showmask{
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:100%;
+	height:100%;
+	z-index:2;
+}
+.showmask .showbox{
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5%;
+	height: 70%;
+	width: 60%;
+	text-align: center;
+	background-color: black;
+}
+.showmask .showbox .pic{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	height: 60%;
+}
+.showmask .showbox .cmt{
+	margin-top: 5%;
+	margin-bottom: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: white;
+	width: 90%;
+	height: 10%;
+}
+.showmask .showbox .pre{
+	margin-top: 5%;
+	margin-bottom: 0px;
+	margin-left: 10%;
+	margin-right: 0px;
+	width: 30%;
+	height: 10%;
+	float: left;
+	border-radius: 5px;
+	background-color: white;
+}
+.showmask .showbox .next{
+	margin-top: 5%;
+	margin-bottom: 0px;
+	margin-left: 20%;
+	width: 30%;
+	height: 10%;
+	float: left;
+	border-radius: 5px;
+	background-color: white;
+}
+
+@-webkit-keyframes shade{
+	from{opacity:1;}
+	10%{opacity:0.4;}
+	to{opacity:1;}
+}
+@-moz-keyframes shade{
+	from{opacity:1;}
+	10%{opacity:0.4;}
+	to{opacity:1;}
+}
+@-ms-keyframes shade{
+	from{opacity:1;}
+	10%{opacity:0.4;}
+	to{opacity:1;}
+}
+@-o-keyframes shade{
+	from{opacity:1;}
+	10%{opacity:0.4;}
+	to{opacity:1;}
+}
+@keyframes shade{
+	from{opacity:1;}
+	10%{opacity:0.4;}
+	to{opacity:1;}
+}
+#wrap .pic:hover{
+	-webkit-animation:shade 3s ease-in-out infinite;
+	-moz-animation:shade 3s ease-in-out infinite;
+	-ms-animation:shade 3s ease-in-out infinite;
+	-o-animation:shade 3s ease-in-out infinite;
+	animation:shade 3s ease-in-out infinite;
+}
+
+</style>
+<script>
+var data={
+    "pic": [
+        {
+            "name": "u=1041561052,637656768&fm=21&gp=0.jpg",
+            "iHeight": 200,
+            "iWidth": 200
+        },
+        {
+            "name": "u=1270148891,788410718&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 212
+        },
+        {
+            "name": "u=1293396307,358289897&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 330
+        },
+        {
+            "name": "u=1475913786,2395075623&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 331
+        },
+        {
+            "name": "u=1649846774,2382754863&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 293
+        },
+        {
+            "name": "u=1982215459,2738669859&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 329
+        },
+        {
+            "name": "u=200519978,3742826747&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 164
+        },
+        {
+            "name": "u=2088827572,2058618216&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 391
+        },
+        {
+            "name": "u=2270971580,1824555624&fm=21&gp=0.jpg",
+            "iHeight": 200,
+            "iWidth": 200
+        },
+        {
+            "name": "u=2381109085,116925922&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 313
+        },
+        {
+            "name": "u=2616083484,2140622751&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 325
+        },
+        {
+            "name": "u=2657774470,4203359604&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 330
+        },
+        {
+            "name": "u=3081661649,4158720719&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 176
+        },
+        {
+            "name": "u=328122223,3810777942&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 225
+        },
+        {
+            "name": "u=356719267,695965863&fm=21&gp=0.jpg",
+            "iHeight": 200,
+            "iWidth": 200
+        },
+        {
+            "name": "u=3834964573,1002581868&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 169
+        },
+        {
+            "name": "u=412318101,4258658083&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 303
+        },
+        {
+            "name": "u=4192967664,1683568891&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 308
+        },
+        {
+            "name": "u=4199296175,4075882495&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 165
+        },
+        {
+            "name": "u=4213422818,951094988&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 276
+        },
+        {
+            "name": "u=435238075,2655076804&fm=21&gp=0.jpg",
+            "iHeight": 200,
+            "iWidth": 200
+        },
+        {
+            "name": "u=676657988,164488683&fm=21&gp=0.jpg",
+            "iHeight": 220,
+            "iWidth": 138
+        }
+    ]
+}
+var commentId = 0;
+var lineId = 1;
+var picnum = 0;
+function getLineId(num){
+	if (num===1) {
+		return "line1";
+	}
+	else if (num===2) {
+		return "line2";
+	}
+	else if (num===3) {
+		return "line3";
+	}
+	else{
+		return undefined;
+	}
+}
+
+function insertBox(line,imgroute){
+
+	var tempbox = document.createElement('div');
+	var tempimg = document.createElement('img');
+	var temploccont = document.createElement('div');
+	var temploc = document.createElement('button');
+
+	tempbox.setAttribute('class','box');
+	tempimg.setAttribute('class','pic');
+	temploccont.setAttribute('class','loccont');
+	temploc.setAttribute('class','loc');
+
+	var tempname = 'pic'+picnum.toString();
+	tempimg.setAttribute('name',tempname);
+	tempimg.src=imgroute;
+	tempimg.addEventListener('click',function(){showLarge(imgroute);},false);
+	temploc.innerText = "显示距离";
+	temploc.addEventListener('click',function(){clickloc(tempimg);},false);
+
+	line.appendChild(tempbox);
+	tempbox.appendChild(tempimg);
+	tempbox.appendChild(temploccont);
+	tempbox.appendChild(temploc);
+}
+
+function showThree(){
+	var tempLine;
+	for(var i=1; i<=3; i++){
+		tempLine = document.getElementById(getLineId(i));
+		var picdata = getJason();
+		insertBox(tempLine,"http://zjcAlistar.github.io/pic/"+picdata.pic[picnum].name);
+		picnum += 1;
+		picnum = picnum%(picdata.pic.length);
+	}
+}
+
+function getMinL(L1,L2,L3){
+	var Lmin = L1;
+	if (Lmin.offsetHeight>L2.offsetHeight) {Lmin=L2;}
+	if (Lmin.offsetHeight>L3.offsetHeight) {Lmin=L3;}
+	return Lmin;
+}
+
+function getCheck(){
+	var documentH = document.documentElement.clientHeight;
+	var scrollH = document.documentElement.scrollTop || document.body.scrollTop;
+	var L1,L2,L3,Lmin;
+	L1 = document.getElementById('line1');
+	L2 = document.getElementById('line2');
+	L3 = document.getElementById('line3');
+	Lmin = getMinL(L1,L2,L3);
+	var tempwrap = document.getElementById('wrap');
+	var allH = Lmin.offsetHeight+Lmin.offsetTop;
+	if (allH <= documentH+scrollH) {
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+window.onscroll=function(){
+	var L1,L2,L3,Lmin;
+	var state = document.getElementById('state');
+	if(getCheck()){
+		state.innerText="正在加载";
+		L1 = document.getElementById('line1');
+		L2 = document.getElementById('line2');
+		L3 = document.getElementById('line3');
+		Lmin = getMinL(L1,L2,L3);
+
+		var picdata = getJason();
+		insertBox(Lmin,"http://zjcAlistar.github.io/pic/"+picdata.pic[picnum].name);
+		picnum += 1;
+		picnum = picnum%(picdata.pic.length);
+		state.innerText="加载成功";
+	}
+}
+
+function showLarge(imgroute){
+	var tempmask = document.createElement('div');
+	var tempbox = document.createElement('div');
+	var tempimg = document.createElement('img');
+	var tempcomment = document.createElement('div');
+	var temppre = document.createElement('button');
+	var tempnext = document.createElement('button');
+
+	tempmask.setAttribute('class','showmask');
+	tempbox.setAttribute('class','showbox');
+	tempimg.setAttribute('class','pic');
+	tempimg.src=imgroute;
+	tempcomment.setAttribute('class','cmt');
+	tempcomment.innerText = "这里是评论，点击按钮查看";
+	temppre.setAttribute('class','pre');
+	temppre.innerText = "上一页";
+	temppre.addEventListener('click',function(){loadComment(-1,tempcomment);},false);
+	tempnext.setAttribute('class','next');
+	tempnext.innerText = "下一页";
+	tempnext.addEventListener('click',function(){loadComment(1,tempcomment);},false);
+
+	document.getElementsByTagName('body')[0].appendChild(tempmask);
+	tempmask.appendChild(tempbox);
+	tempbox.appendChild(tempimg);
+	tempbox.appendChild(tempcomment);
+	tempbox.appendChild(temppre);
+	tempbox.appendChild(tempnext);
+	tempmask.addEventListener('click',function(event){if(event.target===tempmask){cleanmask(tempmask);}},false);
+}
+
+function cleanmask(Obj){
+	Obj.parentNode.removeChild(Obj);
+	commentId=0;
+}
+
+function clickloc(Obj){
+	function getLocation(){
+  		if (navigator.geolocation){
+    		navigator.geolocation.getCurrentPosition(showPosition);
+    	}
+  		else{
+  			Obj.innerHTML="Geolocation is not supported by this browser.";
+  		}
+  	}
+	function showPosition(position){
+  	Obj.innerHTML="Latitude: " + position.coords.latitude +
+ 					"<br />Longitude: " + position.coords.longitude;
+  	}
+}
+
+function loadComment(num,Obj)
+{
+	commentId += num;
+	if (commentId<0) {commentId+=4;}
+	commentId = commentId%4;
+	var temproute = commentId+".txt";
+	temproute = "http://zjcAlistar.github.io/comment/comment"+temproute;
+	
+	var xmlhttp;
+	xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function(){
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    		Obj.innerHTML=xmlhttp.responseText;
+    	}
+  	}
+  	xmlhttp.open("GET",temproute,false);
+	xmlhttp.send();
+}
+
+function getJason()
+{
+	var xmlhttp;
+	xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function(){
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    		var picdata = eval(xmlhttp.responseText);
+    		return picdata;
+    	}
+  	}
+  	xmlhttp.open("GET","http://zjcAlistar.github.io/pictureinfo.json",false);
+	xmlhttp.send();
+}
+</script>
+</head>
+
+<body>
+<div id="state">加载成功</div>
+<div id="mtitle">
+	<h1>王小寒的秀恩爱网</h1>
+	<h2>By 竺俊超</h2>
+</div>
+<div id="wrap">
+	<div id="line1">
+	</div>
+	<div id="line2">
+	</div>
+	<div id="line3">
+	</div>
+</div>
+
+
+<script>
+	while(getCheck()){
+		showThree();
+	}
+</script>
+</body>
+</html>
