@@ -15,7 +15,7 @@ body{
 #mtitle h2{
 	text-align:center;
 	font-size:20px;
-	font-family:'simsun'
+	font-family:'simsun';
 }
 #state{
 	position: fixed;
@@ -23,14 +23,14 @@ body{
 	top: 10px;
 	text-align:center;
 	font-size:15px;
-	font-family:'Microsoft YaHei'
+	font-family:'Microsoft YaHei';
 }
 #wrap{
 	overflow:hidden;
 	margin-left: auto;
 	margin-right: auto;
 	width: 1000px;
-	height: auto
+	height: auto;
 }
 #wrap #line1,#line2{
 	margin-top: 0px;
@@ -56,12 +56,15 @@ body{
 	width: 100%;
 	height: auto;
 	border-radius: 15px;
-	background-color: #CDCDCD
+	background-color: #CDCDCD;
+
 }
 .box .pic{
 	margin-top: 0px;
 	width: 100%;
 	height: auto;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
 }
 .loccont{
 	margin-top: 5px;
@@ -88,15 +91,33 @@ body{
 	height:100%;
 	z-index:2;
 }
+.showmask .showshade{
+	position: absolute;
+	z-index:2;
+	left: 15%;
+	top: 6%;
+	height: 80%;
+	width: 70%;
+	min-height: 571px;
+	min-width: 816px;
+	background-color: black;
+	border-width: 10px;
+	border-color: gray;
+	border-style: solid;
+	border-radius: 15px;
+	opacity: 0.7;
+}
 .showmask .showbox{
 	overflow: hidden;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 5%;
+	position: absolute;
+	z-index:3;
+	left: 20%;
+	top: 12%;
 	height: 70%;
 	width: 60%;
+	min-height: 500px;
+	min-width: 700px;
 	text-align: center;
-	background-color: black;
 }
 .showmask .showbox .pic{
 	margin-top: 0px;
@@ -109,13 +130,14 @@ body{
 	margin-left: auto;
 	margin-right: auto;
 	background-color: white;
-	width: 90%;
+	width: 76%;
 	height: 10%;
+	line-height: 45px;
 }
 .showmask .showbox .pre{
 	margin-top: 5%;
 	margin-bottom: 0px;
-	margin-left: 10%;
+	margin-left: 12%;
 	margin-right: 0px;
 	width: 30%;
 	height: 10%;
@@ -126,7 +148,7 @@ body{
 .showmask .showbox .next{
 	margin-top: 5%;
 	margin-bottom: 0px;
-	margin-left: 20%;
+	margin-left: 16%;
 	width: 30%;
 	height: 10%;
 	float: left;
@@ -136,30 +158,34 @@ body{
 
 @-webkit-keyframes shade{
 	from{opacity:1;}
-	10%{opacity:0.4;}
+	50%{opacity:0.4;}
 	to{opacity:1;}
 }
 @-moz-keyframes shade{
 	from{opacity:1;}
-	10%{opacity:0.4;}
+	50%{opacity:0.4;}
 	to{opacity:1;}
 }
 @-ms-keyframes shade{
 	from{opacity:1;}
-	10%{opacity:0.4;}
+	50%{opacity:0.4;}
 	to{opacity:1;}
 }
 @-o-keyframes shade{
 	from{opacity:1;}
-	10%{opacity:0.4;}
+	50%{opacity:0.4;}
 	to{opacity:1;}
 }
 @keyframes shade{
 	from{opacity:1;}
-	10%{opacity:0.4;}
+	50%{opacity:0.4;}
 	to{opacity:1;}
 }
 #wrap .pic:hover{
+	transform: scale(0.95,0.95);
+	-ms-transform: scale(0.95,0.95);	
+	-webkit-transform: scale(0.95,0.95);	
+	-moz-transform: scale(0.95,0.95);	
 	-webkit-animation:shade 3s ease-in-out infinite;
 	-moz-animation:shade 3s ease-in-out infinite;
 	-ms-animation:shade 3s ease-in-out infinite;
@@ -198,6 +224,11 @@ function insertBox(line,imgroute){
 	var temploccont = document.createElement('div');
 	var temploc = document.createElement('button');
 
+	line.appendChild(tempbox);
+	tempbox.appendChild(tempimg);
+	tempbox.appendChild(temploccont);
+	tempbox.appendChild(temploc);
+
 	tempbox.setAttribute('class','box');
 	tempimg.setAttribute('class','pic');
 	temploccont.setAttribute('class','loccont');
@@ -212,10 +243,7 @@ function insertBox(line,imgroute){
 	temploc.innerText = "显示距离";
 	temploc.addEventListener('click',function(){pos=temploccont;getLocation();},false);
 
-	line.appendChild(tempbox);
-	tempbox.appendChild(tempimg);
-	tempbox.appendChild(temploccont);
-	tempbox.appendChild(temploc);
+	
 }
 
 function showThree(){
@@ -273,6 +301,7 @@ window.onscroll=function(){
 
 function showLarge(imgroute){
 	var tempmask = document.createElement('div');
+	var tempshade = document.createElement('div');
 	var tempbox = document.createElement('div');
 	var tempimg = document.createElement('img');
 	var tempcomment = document.createElement('div');
@@ -280,6 +309,7 @@ function showLarge(imgroute){
 	var tempnext = document.createElement('button');
 
 	tempmask.setAttribute('class','showmask');
+	tempshade.setAttribute('class','showshade');
 	tempbox.setAttribute('class','showbox');
 	tempimg.setAttribute('class','pic');
 	tempimg.src=imgroute;
@@ -294,6 +324,7 @@ function showLarge(imgroute){
 
 	document.getElementsByTagName('body')[0].appendChild(tempmask);
 	tempmask.appendChild(tempbox);
+	tempmask.appendChild(tempshade);
 	tempbox.appendChild(tempimg);
 	tempbox.appendChild(tempcomment);
 	tempbox.appendChild(temppre);
@@ -403,7 +434,7 @@ function getJsonloc(Obj)
 
 
 <script>
-	while(getCheck()){
+	for (var i = 2; i >= 0; i--) {
 		showThree();
 	}
 </script>
