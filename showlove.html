@@ -96,10 +96,7 @@ body{
 	z-index:2;
 	left: 15%;
 	top: 6%;
-	height: 80%;
-	width: 70%;
-	min-height: 571px;
-	min-width: 816px;
+
 	background-color: black;
 	border-width: 10px;
 	border-color: gray;
@@ -113,10 +110,7 @@ body{
 	z-index:3;
 	left: 20%;
 	top: 12%;
-	height: 70%;
-	width: 60%;
-	min-height: 500px;
-	min-width: 700px;
+
 	text-align: center;
 }
 .showmask .showbox .pic{
@@ -202,6 +196,10 @@ var commentId = 0;
 var lineId = 1;
 var picnum = 0;
 var pos=0;
+var times=0;
+var Obj1 = 0;
+var Obj2 = 0;
+var curImg = [];
 function getLineId(num){
 	if (num===1) {
 		return "line1";
@@ -217,7 +215,7 @@ function getLineId(num){
 	}
 }
 
-function insertBox(line,imgroute){
+function insertBox(line){
 
 	var tempbox = document.createElement('div');
 	var tempimg = document.createElement('img');
@@ -234,28 +232,30 @@ function insertBox(line,imgroute){
 	temploccont.setAttribute('class','loccont');
 	temploc.setAttribute('class','loc');
 
-	var tpicnum = picnum-1;
-	var tempname = 'pic'+tpicnum.toString();
-	tempimg.setAttribute('name',tempname);
+	tempimg.src = "http://imgsrc.baidu.com/forum/w%3D580/sign=cd612eada7efce1bea2bc8c29f50f3e8/b28e8db1cb13495454ad853f564e9258d0094a8f.jpg";
 	tempimg.setAttribute('alt','该图加载失败');
-	tempimg.src=imgroute;
-	tempimg.addEventListener('click',function(){showLarge(imgroute);},false);
+	tempimg.addEventListener('load',
+		function(){
+			if(tempimg.readyState=='complete'){
+				document.getElementById('state').innerText="加载成功";
+			}
+			else{
+				document.getElementById('state').innerText="正在加载";
+			}
+		}
+	)
+	curImg.push(tempimg);
+	tempimg.addEventListener('click',function(){showLarge(tempimg.src);},false);
 	temploc.innerText = "显示距离";
 	temploc.addEventListener('click',function(){pos=temploccont;getLocation();},false);
-
-	
 }
 
 function showThree(){
 	var tempLine;
-	var state = document.getElementById('state');
 	for(var i=1; i<=3; i++){
 		tempLine = document.getElementById(getLineId(i));
+		insertBox(tempLine);
 		getJsonfname();
-		var route = "http://zjcAlistar.github.io/pic/"+fname;
-		state.innerText="正在加载";
-		insertBox(tempLine,route);
-		state.innerText="加载成功";
 	}
 }
 
@@ -286,16 +286,25 @@ function getCheck(){
 
 window.onscroll=function(){
 	var L1,L2,L3,Lmin;
-	var state = document.getElementById('state');
 	if(getCheck()){
-		state.innerText="正在加载";
 		L1 = document.getElementById('line1');
 		L2 = document.getElementById('line2');
 		L3 = document.getElementById('line3');
-		Lmin = getMinL(L1,L2,L3);
+		Lmin = getMinL(L1,L2,L3);	
+		insertBox(Lmin);
 		getJsonfname();
-		insertBox(Lmin,"http://zjcAlistar.github.io/pic/"+fname);
-		state.innerText="加载成功";
+	}
+}
+
+function showAnimate(Obj1,Obj2){
+	times = times+1;
+	Obj1.setAttribute('style','height:'+(7*times)+'%;width:'+(6*times)+'%');
+	Obj2.setAttribute('style','height:'+(8*times)+'%;width:'+(7*times)+'%');
+
+	changedelay = setTimeout('showAnimate(Obj1,Obj2)',50);
+	if (times == 10) {
+		clearTimeout(changedelay);
+		times = 0;
 	}
 }
 
@@ -330,6 +339,10 @@ function showLarge(imgroute){
 	tempbox.appendChild(temppre);
 	tempbox.appendChild(tempnext);
 	tempmask.addEventListener('click',function(event){if(event.target===tempmask){cleanmask(tempmask);}},false);
+
+	Obj1 = tempbox;
+	Obj2 = tempshade;
+	showAnimate(Obj1,Obj2);
 }
 
 function cleanmask(Obj){
@@ -371,7 +384,7 @@ function loadComment(num,Obj)
     		Obj.innerHTML=xmlhttp.responseText;
     	}
   	}
-  	xmlhttp.open("GET",temproute,false);
+  	xmlhttp.open("GET",temproute,true);
 	xmlhttp.send();
 }
 
@@ -387,11 +400,16 @@ function getJsonfname()
     		var picdata = new Object();
     		picdata = eval("("+str+")");
     		fname = picdata.pic[picnum].name;
+    		var nowImg = curImg.shift();
+    		var tpicnum = picnum;
+			var tempname = 'pic'+tpicnum.toString();
+			nowImg.setAttribute('name',tempname);
+    		nowImg.src = "http://zjcAlistar.github.io/pic/"+fname;
     		picnum += 1;
 			picnum = picnum%(picdata.pic.length);
     	}
   	}
-  	xmlhttp.open("GET","http://zjcAlistar.github.io/pictureinfo.json",false);
+  	xmlhttp.open("GET","http://zjcAlistar.github.io/pictureinfo.json",true);
 	xmlhttp.send();
 }
 
@@ -411,7 +429,7 @@ function getJsonloc(Obj)
     		iLon = picdata.pic[num].iLongitude;
     	}
   	}
-  	xmlhttp.open("GET","http://zjcAlistar.github.io/pictureinfo.json",false);
+  	xmlhttp.open("GET","http://zjcAlistar.github.io/pictureinfo.json",true);
 	xmlhttp.send();
 }
 </script>
