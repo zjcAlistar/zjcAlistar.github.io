@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset='utf-8'>
-<script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+<script src="https://zjcAlistar.github.io/firebase.js"></script>
 <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
 <link rel='stylesheet' type='text/css' href='chatstyle.css'>
 </head>
@@ -51,24 +51,24 @@
 </div>
 
 <script>
-	$("#maintable").hide();
+	$("#maintable").hide();//登录之前隐藏聊天室
 
-	var curName;
-	var curSecret;
-	var availableFlag = true;
-	var enterFlag = false;
-	var samelogFlag = false;
-	var secreterrorFlag = false;
+	var curName;//用户名
+	var curSecret;//密码
+	var availableFlag = true;//可用标记
+	var enterFlag = false;//登录标记
+	var samelogFlag = false;//重名标记
+	var secreterrorFlag = false;//密码错误标记
 	var namelist = new Object();
-	var nameref = new Firebase("https://alistarchatroom.firebaseio.com/namelists");
-	var messageref = new Firebase("https://alistarchatroom.firebaseio.com/messages");
+	var nameref = new Firebase("https://alistarchatroom.firebaseio.com/namelists");//存名字列表
+	var messageref = new Firebase("https://alistarchatroom.firebaseio.com/messages");//存消息列表
 
 	nameref.orderByKey().on('value',function(snapshot){
 		namelist = snapshot.val();
 		var listshow = $('#usernames');
 		listshow.empty();
 		displaylist(namelist,listshow);
-	});
+	});//当在线列表有变化时将返回的对象放在namelist中
 
 	$('#signup').click(function(){		
 		curName = $("#nameInput").val();
@@ -88,7 +88,8 @@
 				$("#nameInput").val("");
 				$("#secretInput").val("");
 				$("#signdialog").fadeOut(1000);
-				$("#maintable").fadeIn(1000,function(){beginChat();});		
+				$("#maintable").fadeIn(1000,function(){beginChat();});	
+				$('#messagesshow').empty();	
 				$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);	
 				$('#messagetable header h3').text(curName);
 			}
@@ -97,7 +98,7 @@
 			availableFlag = true;
 			alert("用户名已存在,请重新输入");
 		}
-	});
+	});//按下signup时的事件响应，遍历列表看是否重名
 
 	$('#login').click(function(){		
 		curName = $("#nameInput").val();
@@ -122,10 +123,12 @@
 			var curref = nameref.child(tempKey);
 			curref.update({state:1});
 			alert("登录成功");
+			$('#messagesshow').empty();
 			$("#nameInput").val("");
 			$("#secretInput").val("");
 			$("#signdialog").fadeOut(1000);
 			$("#maintable").fadeIn(1000, function(){beginChat();});
+			$('#messagesshow').empty();
 			$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
 			$('#messagetable header h3').text(curName);
 			enterFlag = false;
@@ -143,7 +146,7 @@
 				alert("用户不存在");
 			}
 		}
-	});
+	});//按下login的事件响应，看密码是否正确或用户已在别处登录
 
 	function beginChat(){
 		messageref.limitToLast(10).on('child_added',function(snapshot){
@@ -175,7 +178,7 @@
 				messageElement.appendTo($("#messagesshow"));
 				$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
 		});
-	}
+	}//开启监听消息列表的变化以及用户登录情况的变化
 
 	function  displaylist(namelist,listshow){
 		for (var p in namelist) {
@@ -185,7 +188,7 @@
 				 	} 
 	  			}
 	  		}
-	}
+	}//显示在线列表
 
 	function  getKey(namelist,name){
 		for (var p in namelist) {
@@ -195,7 +198,7 @@
 				 	} 
 	  			}
 	  		}
-	}
+	}//获得用户名在数据库中的键值
 
 	function isBlank(str){
 		for(var i = 0; i < str.length; i++){
@@ -204,7 +207,7 @@
 			}
 		}
 		return true;
-	}
+	}//判断一个串是否为空
 
 	$('#send').click(function(){
 		if(!isBlank($('#messageInput')[0].value)){
@@ -216,7 +219,7 @@
 			$('#messageInput')[0].value = "";
 	 		alert("发送的消息不能为空");
 		}
-	});
+	});//按下send后发送消息
 
 	$('#messageInput').keyup(function (e){
 	 	if (e.keyCode == 13 && !isBlank($('#messageInput')[0].value)) {
@@ -228,7 +231,7 @@
 	 		$('#messageInput')[0].value = "";
 	 		alert("发送的消息不能为空");
 	 	}
-	});
+	});//按下回车后发送消息
 
 	$('#logout').click(function(){
 		var tempKey = getKey(namelist,curName);
@@ -238,14 +241,14 @@
 		messageref.off('child_added');
 		$("#maintable").fadeOut(1000);
 		$("#signdialog").fadeIn(1000);
-	});
+	});//按下登出后用户状态改变
 
 	$(window).on('beforeunload', function() {
 		var tempKey = getKey(namelist,curName);
 		var curref = nameref.child(tempKey);
 		curref.update({state:0});
 		messageref.off('child_added');
-	});
+	});//关闭窗口后用户状态改变
 
 </script>
 </body>
