@@ -197,10 +197,37 @@
 	  		}
 	}
 
+	function isBlank(str){
+		for(var i = 0; i < str.length; i++){
+			if (!(str[i] == " " || str[i] == "\n")) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	$('#send').click(function(){
-		messageref.push({name:curName,message:$('#messageInput').val()});
-		$('#messageInput').val("");
-		$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
+		if(!isBlank($('#messageInput')[0].value)){
+			messageref.push({name:curName,message:$('#messageInput').val()});
+			$('#messageInput').val("");
+			$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
+		}
+		else{
+			$('#messageInput')[0].value = "";
+	 		alert("发送的消息不能为空");
+		}
+	});
+
+	$('#messageInput').keyup(function (e){
+	 	if (e.keyCode == 13 && !isBlank($('#messageInput')[0].value)) {
+	 		messageref.push({name:curName,message:$('#messageInput').val()});
+			$('#messageInput').val("");
+			$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
+	 	}
+	 	else if(e.keyCode == 13){
+	 		$('#messageInput')[0].value = "";
+	 		alert("发送的消息不能为空");
+	 	}
 	});
 
 	$('#logout').click(function(){
@@ -220,14 +247,6 @@
 		messageref.off('child_added');
 	});
 
-	$('#messageInput').keyup(function (e){
-	 	if (e.keyCode == 13) {
-	 		messageref.push({name:curName,message:$('#messageInput').val()});
-			$('#messageInput').val("");
-			$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
-	 	}
-	});
 </script>
 </body>
 </html>
-
