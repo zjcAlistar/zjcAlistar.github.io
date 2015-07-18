@@ -59,6 +59,7 @@
 	var enterFlag = false;//登录标记
 	var samelogFlag = false;//重名标记
 	var secreterrorFlag = false;//密码错误标记
+	var fisrtTimeFlag = true;//首次加载标记
 	var namelist = new Object();
 	var nameref = new Firebase("https://alistarchatroom.firebaseio.com/namelists");//存名字列表
 	var messageref = new Firebase("https://alistarchatroom.firebaseio.com/messages");//存消息列表
@@ -167,18 +168,30 @@
     			$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
 		});
 		nameref.on('child_changed',function(childSnapshot){
-				var curData = childSnapshot.val();
-				var messageElement = $("<li>");
-				if (curData.state===1) {
-					messageElement.text(curData.name+"加入了聊天室");
+				enterSomeone(childSnapshot);
+		});
+		nameref.limitToLast(1).on('child_added',function(Snapshot){
+				if (fisrtTimeFlag) {
+					fisrtTimeFlag = false;
 				}
 				else{
-					messageElement.text(curData.name+"退出了聊天室");
+					enterSomeone(Snapshot);
 				}
-				messageElement.appendTo($("#messagesshow"));
-				$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
 		});
 	}//开启监听消息列表的变化以及用户登录情况的变化
+
+	function enterSomeone(snapshot){
+		var curData = snapshot.val();
+		var messageElement = $("<li>");
+		if (curData.state===1) {
+			messageElement.text(curData.name+"加入了聊天室");
+		}
+		else{
+			messageElement.text(curData.name+"退出了聊天室");
+		}
+		messageElement.appendTo($("#messagesshow"));
+		$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
+	}//
 
 	function  displaylist(namelist,listshow){
 		for (var p in namelist) {
