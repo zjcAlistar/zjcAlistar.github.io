@@ -1,0 +1,233 @@
+<html>
+<head>
+<meta charset='utf-8'>
+<script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<link rel='stylesheet' type='text/css' href='chatstyle.css'>
+</head>
+<body>
+
+<div id="signdialog">
+	<div id="shade"></div>
+	<img id="pic" src="logpic.jpg"/>
+	<div id="title">
+		<h1>Welcome to Alistar's Chatroom</h1>
+		<h2>Create a new account through "SignUp" or enter through "LogIn" if you have one.</h2>
+	</div>
+	<div id="username">
+		<label for="nameInput">Username:</label>
+    	<input type='text' id='nameInput' placeholder='type a username...'/>
+	</div>
+	<div id="secret">
+		<label for="secretInput">Secret:</label>
+    	<input type='password' id='secretInput' placeholder='type a secret...'/>
+	</div>
+	<button id="signup">SignUp</button>
+	<button id="login">LogIn</button>
+</div>
+
+<div id="maintable">
+	<div id="messagetable">
+		<header>
+			<h1>Alistar's Chat Room</h1>
+			<h2>Your Username is:<h2>
+			<h3></h3>
+		</header>
+		<ul id="messagesshow">
+		</ul>
+		<footer>
+			<button id="logout">LogOut</button>
+			<textarea id='messageInput' placeholder='type your message here...'></textarea>
+			<button id="send">Send</button>
+		</footer>
+	</div>
+	<div id="userlist">
+		<header>
+			<h1>Userlist</h1>
+		</header>
+		<ul id="usernames">
+		</ul>
+	</div>
+</div>
+
+<script>
+	$("#maintable").hide();
+
+	var curName;
+	var curSecret;
+	var availableFlag = true;
+	var enterFlag = false;
+	var samelogFlag = false;
+	var secreterrorFlag = false;
+	var namelist = new Object();
+	var nameref = new Firebase("https://alistarchatroom.firebaseio.com/namelists");
+	var messageref = new Firebase("https://alistarchatroom.firebaseio.com/messages");
+
+	nameref.orderByKey().on('value',function(snapshot){
+		namelist = snapshot.val();
+		var listshow = $('#usernames');
+		listshow.empty();
+		displaylist(namelist,listshow);
+	});
+
+	$('#signup').click(function(){		
+		curName = $("#nameInput").val();
+		curSecret = $("#secretInput").val();
+		for (var p in namelist) {
+			if (typeof(namelist[p]) != "function"){
+			 	if (namelist[p].name===curName) {availableFlag=false;} 
+  			}
+  		}
+		if(availableFlag){
+			if (curName === "") {
+				alert("用户名不允许为空");
+			}
+			else{
+				nameref.push({name:curName,secret:curSecret,state:1});
+				alert("注册成功");
+				$("#nameInput").val("");
+				$("#secretInput").val("");
+				$("#signdialog").fadeOut(1000);
+				$("#maintable").fadeIn(1000,function(){beginChat();});		
+				$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);	
+				$('#messagetable header h3').text(curName);
+			}
+		}
+		else{
+			availableFlag = true;
+			alert("用户名已存在,请重新输入");
+		}
+	});
+
+	$('#login').click(function(){		
+		curName = $("#nameInput").val();
+		curSecret = $("#secretInput").val();
+		for (var p in namelist) {
+			if (typeof(namelist[p]) != "function"){
+			 	if (namelist[p].name===curName){
+			 		if(namelist[p].state === 0 && namelist[p].secret === curSecret){
+			 			enterFlag=true;
+			 		}
+					else if(namelist[p].state === 0 && namelist[p].secret != curSecret){
+						secreterrorFlag=true;
+					}
+					else if(namelist[p].state ===1){
+						samelogFlag=true;
+					}
+			 	} 
+  			}
+  		}
+		if(enterFlag){
+			var tempKey = getKey(namelist,curName);
+			var curref = nameref.child(tempKey);
+			curref.update({state:1});
+			alert("登录成功");
+			$("#nameInput").val("");
+			$("#secretInput").val("");
+			$("#signdialog").fadeOut(1000);
+			$("#maintable").fadeIn(1000, function(){beginChat();});
+			$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
+			$('#messagetable header h3').text(curName);
+			enterFlag = false;
+		}
+		else{
+			if (secreterrorFlag) {
+				alert("密码错误");
+				secreterrorFlag=false;
+			}
+			else if(samelogFlag){
+				alert("用户已在别处登录");
+				samelogFlag=false;
+			}
+			else{
+				alert("用户不存在");
+			}
+		}
+	});
+
+	function beginChat(){
+		messageref.limitToLast(10).on('child_added',function(snapshot){
+				var curData = snapshot.val();
+				var nowName = curData.name+": ";
+				var nowMessage = curData.message;
+				var messageElement = $("<li>");
+    			var nameElement = $("<strong>")
+    			nameElement.text(nowName);
+    			messageElement.text(nowMessage).prepend(nameElement);
+    			if(curName === curData.name){
+    				messageElement.attr("style","color:red");
+    			}
+    			else{
+    				messageElement.attr("style","color:black");
+    			}
+    			messageElement.appendTo($("#messagesshow"));
+    			$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
+		});
+		nameref.on('child_changed',function(childSnapshot){
+				var curData = childSnapshot.val();
+				var messageElement = $("<li>");
+				if (curData.state===1) {
+					messageElement.text(curData.name+"加入了聊天室");
+				}
+				else{
+					messageElement.text(curData.name+"退出了聊天室");
+				}
+				messageElement.appendTo($("#messagesshow"));
+				$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
+		});
+	}
+
+	function  displaylist(namelist,listshow){
+		for (var p in namelist) {
+				if (typeof(namelist[p]) != "function"){
+				 	if (namelist[p].state===1) {
+				 		$("<li>").text(namelist[p].name).appendTo(listshow);
+				 	} 
+	  			}
+	  		}
+	}
+
+	function  getKey(namelist,name){
+		for (var p in namelist) {
+				if (typeof(namelist[p]) != "function"){
+				 	if (namelist[p].name === name) {
+				 		return p;
+				 	} 
+	  			}
+	  		}
+	}
+
+	$('#send').click(function(){
+		messageref.push({name:curName,message:$('#messageInput').val()});
+		$('#messageInput').val("");
+		$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
+	});
+
+	$('#logout').click(function(){
+		var tempKey = getKey(namelist,curName);
+		var curref = nameref.child(tempKey);
+		curref.update({state:0});
+		alert("下线成功");
+		messageref.off('child_added');
+		$("#maintable").fadeOut(1000);
+		$("#signdialog").fadeIn(1000);
+	});
+
+	$(window).on('beforeunload', function() {
+		var tempKey = getKey(namelist,curName);
+		var curref = nameref.child(tempKey);
+		curref.update({state:0});
+		messageref.off('child_added');
+	});
+
+	$('#messageInput').keyup(function (e){
+	 	if (e.keyCode == 13) {
+	 		messageref.push({name:curName,message:$('#messageInput').val()});
+			$('#messageInput').val("");
+			$('#messagesshow').scrollTop($('#messagesshow')[0].scrollHeight);
+	 	}
+	});
+</script>
+</body>
+</html>
+
