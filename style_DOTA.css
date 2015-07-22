@@ -1,0 +1,304 @@
+#shade{
+  background: #ddd;
+  position:fixed;
+  z-index: 5;
+  top:0px;
+  left:0px;
+  width: 1320px;
+  height: 700px;
+  margin:0px auto;
+  padding: 0px;
+  border-radius: 10px;
+  border: 4px groove #999;
+  text-align: center;
+}
+
+#shade header{
+  position:absolute;
+  z-index: 5;
+  top:25px;
+  left:310px;
+  margin:0px auto;
+  padding: 0px;
+  height: 200px;
+  width: 700px;
+}
+
+#shade h1,h2{
+  font-family: "Microsoft YaHei";
+}
+
+#shade h1{
+  font-size: 50px;
+}
+
+#shade h2{
+  margin-top: 70px;
+  font-size: 25px;
+}
+
+#shade #start{
+  z-index: 5;
+  position:absolute;
+  left: 560px;
+  top:375px;
+  height:70px;
+  width:200px;
+  border-radius: 44px;
+  background: #bcec36;
+  border:15px solid #999;
+  border-top:15px solid#454545;
+  padding: 0px;
+  margin:0px;
+  font-size: 28px;
+  line-height: 28px;
+  font-family: "Microsoft YaHei";
+}
+
+#shade #test{
+  z-index: 5;
+  position:absolute;
+  left: 560px;
+  top:450px;
+  height:70px;
+  width:200px;
+  border-radius: 44px;
+  background: #bcec36;
+  border:15px solid #999;
+  border-top:15px solid#454545;
+  padding: 0px;
+  margin:0px;
+  font-size: 28px;
+  line-height: 28px;
+  font-family: "Microsoft YaHei";
+}
+
+#container{
+  background: #ddd;
+  position:fixed;
+  top:0px;
+  left:0px;
+  width: 1310px;
+  margin:0px auto;
+  padding: 0px;
+  height:690px;
+  border-radius: 10px;
+  border: 4px groove #999;
+}
+
+.icon{
+  position:absolute;
+  height:80px;
+  width:80px;
+  border: 4px ridge #999;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.map{
+  margin: 0px auto 10px;
+  position:absolute;
+  left:100px;
+  top:20px;
+  height:640px;
+  width:960px;
+  border: 4px ridge #999;
+  padding: 0px;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.map ul{
+  padding: 0px;
+  list-style: none;
+  margin: 0px;
+  overflow: auto; 
+}
+
+.blocks{
+  z-index: 1;
+}
+
+.towers{
+  z-index: 2;
+}
+
+.tower{
+  position: absolute;
+}
+
+.enemys{
+  z-index: 2;
+}
+
+.enemy{
+  position: absolute;
+}
+
+.bullets{
+  z-index: 3;
+}
+
+.bullet{
+  position: absolute;
+}
+.circles{
+  z-index: 3;
+}
+
+.circle{
+  position: absolute;
+}
+
+.crosses{
+  z-index: 3;
+}
+
+.cross{
+  position: absolute;
+}
+
+.block_1{
+  margin: 0px;
+  height: 80px;
+  width: 80px; 
+  background: #bcec36;
+  position: absolute;
+}
+
+.blocks li{
+  margin: 0px;
+  height: 80px;
+  width: 80px;
+  position: absolute;
+}
+.blocks{
+  z-index: 1;
+}
+
+.status div{
+  position:absolute;
+  left:1070px;
+  height:58px;
+  width:200px;
+  border-radius: 44px;
+  background: #bcec36;
+  border:15px inset #999;
+}
+
+.status img{
+  border:4px solid #999;
+}
+
+.status p{
+  position:absolute;
+  left: 50px;
+  top:0px;
+  width:150px;
+  text-align: center;
+  font-size: 40px;
+  font-family: "Broadway";
+  line-height: 58px;
+  margin: 0px auto;
+  color: #454545;
+}
+
+#remind_gold{
+  position: absolute;
+  top:245px;
+  left:150px;
+  width:660px;
+  height: 150px;
+}
+
+#remind_level{
+  position: absolute;
+  top:245px;
+  left:90px;
+  width:780px;
+  height: 150px;
+}
+
+.instruction{
+  position:absolute;
+  left:1070px;
+  top:320px;
+  height:318px;
+  width:200px;
+  border-radius: 44px;
+  background: #bcec36;
+  border:15px solid #999;
+  border-top:15px solid#454545;
+  padding: 0px;
+  margin:0px;
+}
+
+.instruction div{
+  position: absolute;
+  left:35px;
+  margin: 0px auto;
+  width:160px;
+  font-size: 10px;
+  font-family: "Microsoft YaHei";
+  line-height: 14px;
+  color: #454545;
+}
+
+.instruction img{
+  position: absolute;
+  left:5px;
+  margin: 0px auto;
+  width:30px;
+}
+
+.message{
+  position: absolute;
+  left:300px;
+  top:281px;
+  margin: 0px auto;
+  width:360px;
+  height: 68px;
+  font-size: 25px;
+  font-family: "Microsoft YaHei";
+  line-height: 60px;
+  text-align: center;
+  border-radius: 44px;
+  background: #bcec36;
+  border:15px solid #999;
+  border-top:15px solid#454545;
+  padding: 0px;
+}
+
+.changeTowerUI{
+  position: absolute;
+  width: 320px;
+  height: 200px;
+  border: 15px groove #999;
+  border-radius: 40px;
+  background: #ddd;
+  top: 205px;
+  left: 305px;
+  display: none;
+  opacity: 0.8;
+}
+
+.changeTowerUI .icon{
+  position: absolute;
+  width:60px;
+  border-radius: 10px;
+}
+
+.changeTowerUI .change_tower_icon{
+  position:absolute;
+  left:20px;
+  bottom:20px;
+  height:60px;
+  width:60px;
+}
+
+.changeTowerUI .showlevel{
+  position:absolute;
+  bottom: 25px;
+  height: 50px;
+  width: 50px;
+}

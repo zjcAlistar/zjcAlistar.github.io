@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Defence of Tower Alistar</title>
+	<link rel="shortcut icon" type="image/x-icon" href="image/icon/DOTA.ico" media="screen" /> 
+	<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="style_DOTA.css">
+	<script type="text/javascript">
+		var Map=[
+			[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+			[1, 1, 7, 2, 2, 6, 7, 2, 2, 6, 1, 1],
+			[1, 1, 3, 1, 1, 3, 3, 1, 1, 3, 1, 1],
+			[1, 1, 5, 2, 6, 9, 8, 7, 2, 4, 1, 1],
+			[1, 1, 7, 2, 4, 7, 6, 5, 2, 6, 1, 1],
+			[1, 1, 3, 1, 1, 3, 3, 1, 1, 3, 1, 1],
+			[1, 1, 5, 2, 2, 4, 5, 2, 2, 4, 1, 1],
+			[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+		];//数组记录地图
+		//1：非通道；2：左右；3：上下；4：上左；5：上右；6：下左；7：下右
+
+		var Way=[
+			{
+				position_x:6,
+				position_y:3,
+				enemyid:[-1]
+			},
+			{
+				position_x:6,
+				position_y:2,
+				enemyid:[-1]
+			},
+			{
+				position_x:6,
+				position_y:1,
+				enemyid:[-1]
+			},
+			{
+				position_x:7,
+				position_y:1,
+				enemyid:[-1]
+			},
+			{
+				position_x:8,
+				position_y:1,
+				enemyid:[-1]
+			},
+			{
+				position_x:9,
+				position_y:1,
+				enemyid:[-1]
+			},
+			{
+				position_x:9,
+				position_y:2,
+				enemyid:[-1]
+			},
+			{
+				position_x:9,
+				position_y:3,
+				enemyid:[-1]
+			},
+			{
+				position_x:8,
+				position_y:3,
+				enemyid:[-1]
+			},
+			{
+				position_x:7,
+				position_y:3,
+				enemyid:[-1]
+			},
+			{
+				position_x:7,
+				position_y:4,
+				enemyid:[-1]
+			},
+			{
+				position_x:8,
+				position_y:4,
+				enemyid:[-1]
+			},
+			{
+				position_x:9,
+				position_y:4,
+				enemyid:[-1]
+			},
+			{
+				position_x:9,
+				position_y:5,
+				enemyid:[-1]
+			},
+			{
+				position_x:9,
+				position_y:6,
+				enemyid:[-1]
+			},
+			{
+				position_x:8,
+				position_y:6,
+				enemyid:[-1]
+			},
+			{
+				position_x:7,
+				position_y:6,
+				enemyid:[-1]
+			},
+			{
+				position_x:6,
+				position_y:6,
+				enemyid:[-1]
+			},
+			{
+				position_x:6,
+				position_y:5,
+				enemyid:[-1]
+			},
+			{
+				position_x:6,
+				position_y:4,
+				enemyid:[-1]
+			},
+			{
+				position_x:5,
+				position_y:4,
+				enemyid:[-1]
+			},
+			{
+				position_x:5,
+				position_y:5,
+				enemyid:[-1]
+			},
+			{
+				position_x:5,
+				position_y:6,
+				enemyid:[-1]
+			},
+			{
+				position_x:4,
+				position_y:6,
+				enemyid:[-1]
+			},
+			{
+				position_x:3,
+				position_y:6,
+				enemyid:[-1]
+			},
+			{
+				position_x:2,
+				position_y:6,
+				enemyid:[-1]
+			},
+			{
+				position_x:2,
+				position_y:5,
+				enemyid:[-1]
+			},
+			{
+				position_x:2,
+				position_y:4,
+				enemyid:[-1]
+			},
+			{
+				position_x:3,
+				position_y:4,
+				enemyid:[-1]
+			},
+			{
+				position_x:4,
+				position_y:4,
+				enemyid:[-1]
+			},
+			{
+				position_x:4,
+				position_y:3,
+				enemyid:[-1]
+			},
+			{
+				position_x:3,
+				position_y:3,
+				enemyid:[-1]
+			},
+			{
+				position_x:2,
+				position_y:3,
+				enemyid:[-1]
+			},
+			{
+				position_x:2,
+				position_y:2,
+				enemyid:[-1]
+			},
+			{
+				position_x:2,
+				position_y:1,
+				enemyid:[-1]
+			},
+			{
+				position_x:3,
+				position_y:1,
+				enemyid:[-1]
+			},
+			{
+				position_x:4,
+				position_y:1,
+				enemyid:[-1]
+			},
+			{
+				position_x:5,
+				position_y:1,
+				enemyid:[-1]
+			},
+			{
+				position_x:5,
+				position_y:2,
+				enemyid:[-1]
+			},
+			{
+				position_x:5,
+				position_y:3,
+				enemyid:[-1]
+			}
+		]//记录怪物通道从起点到终点的位置
+
+		var Waveinfo=[
+			{
+				number:10,
+				health:30,
+				speed:0.125,
+				addNextDelay:970
+
+			},
+			{
+				number:10,
+				health:50,
+				speed:0.125,
+				addNextDelay:970
+			},
+			{
+				number:10,
+				health:70,
+				speed:0.14,
+				addNextDelay:870
+			},
+			{
+				number:10,
+				health:100,
+				speed:0.15,
+				addNextDelay:770
+			},
+			{
+				number:2,
+				health:500,
+				speed:0.15,
+				addNextDelay:770
+			},
+			{
+				number:10,
+				health:200,
+				speed:0.15,
+				addNextDelay:770
+			},
+			{
+				number:25,
+				health:100,
+				speed:0.25,
+				addNextDelay:500
+			},
+			{
+				number:8,
+				health:300,
+				speed:0.15,
+				addNextDelay:770
+			},
+			{
+				number:10,
+				health:350,
+				speed:0.18,
+				addNextDelay:740
+			},
+			{
+				number:1,
+				health:1200,
+				speed:0.18,
+				addNextDelay:740
+			}
+		]//记录每波怪的怪物属性信息
+
+		var Tower_kind=[
+			{
+				level:[
+					{	
+						power:3,
+						price:40
+					},
+					{
+						power:5,
+						price:60
+					},
+					{
+						power:7,
+						price:80
+					}
+				]
+			},
+			{
+				level:[
+					{	
+						power:3,
+						price:20
+					},
+					{
+						power:5,
+						price:30
+					},
+					{
+						power:7,
+						price:50
+					}
+				]
+			},
+			{
+				level:[
+					{	
+						power:1,
+						price:100
+					},
+					{
+						power:2,
+						price:50
+					},
+					{
+						power:4,
+						price:50
+					}
+				]
+			},
+			{
+				level:[
+					{	
+						power:2,
+						price:80
+					},
+					{
+						power:4,
+						price:100
+					},
+					{
+						power:6,
+						price:120
+					}
+				]
+			}
+		]//记录各种塔以及不同等级的伤害，建造价格等信息
+
+		var Tower=[];//记录现在已经修建的塔的坐标
+		var Enemy=[];//记录当前波数的怪的信息
+		var Bullets=[]; //记录当前显示在地图上的所有子弹的坐标，方便重画调用
+		var Circles=[];//记录当前显示在地图上的圆形弹道的位置
+
+		var wave = 0;//记录当前怪物波数，从0开始记录，显示波数时将其加1显示
+		var HP = 5;//当前剩余血量
+		var gold = 40;//当前金钱
+		var num_enemyOnMap = 0;//当前显示在地图上的敌人个数
+		var num_AliveEnemy;//当前存活的敌人数，在后台计算中被在途中的子弹消灭的敌人不算在其中
+		var add_tower_kind;//当前正在添加的塔的种类
+		var skill_0_price = 40;//技能：冰封禁制的金钱消耗
+		var skill_1_price = 40;//技能：集中火力的金钱消耗
+		var speedUpFlag = false;//防御塔攻击加速的判定flag
+		var pauseFlag = false;//暂停状态flag
+		var testFlag = false;//测试模式的flag
+		var change_tower=false;//塔升级和摧毁界面是否开启的判定
+		var change_tower_number;//正在进行防御塔修改的塔的编号
+		var add_tower = false;//判定是否点击了修建防御塔按钮，开启修建模式
+
+		function drawMap(){
+			//遍历Map数组
+			for (var i = 0; i < 8; i++) {
+				for (var j = 0;  j< 12; j++) {
+					var block_top = i*80,
+					block_left = j*80;
+					if (Map[i][j] == 1) {
+						var str='<li class="block_1" style="top:'+block_top+'px;left:'+block_left+'px"></li>';
+						var blockdiv = $(str);
+						blockdiv.appendTo('.blocks');
+					}else{
+						var str='<li class="block_'+ Map[i][j] +'" style="top:'+block_top+'px;left:'+block_left+'px"><img src="image/road_'+ Map[i][j] +'.png" style="width:80px"></li>';
+						var blockdiv = $(str);
+						blockdiv.appendTo('.blocks');		
+					}
+				}
+			}
+		}//根据Map数组的不同赋值进行贴图，绘制地图
+
+		
+		function addTower(){
+			//当建塔状态开启时，进行下一步判断
+			if (add_tower == true) {
+				//如果修建该种类塔金钱足够进入下一步判定，否则给出金钱不足的提示
+				if (gold >= Tower_kind[add_tower_kind].level[0].price) {
+					var objTop = $(".map").css("top");//对象x位置
+					var objLeft = $(".map").css("left");//对象y位置
+					 
+					var mouseX = event.clientX+document.body.scrollLeft;//鼠标x位置
+					var mouseY = event.clientY+document.body.scrollTop;//鼠标y位置
+					//计算点击的相对位置
+					var objX = parseInt((mouseX-parseInt(objLeft) +32)/80);
+					var objY = parseInt((mouseY-parseInt(objTop) +32)/80);
+					//判定点击位置是否有道路，如果有，则点击无效
+					for (var i = 0; i < Way.length; i++) {
+						if (Way[i].position_x == objX && Way[i].position_y == objY){
+							return 0;
+						}
+					}
+					////判定点击位置是否有防御塔，如果有，则点击无效
+					for (var i = 0; i < Tower.length; i++) {
+						if (Tower[i].position_x == objX && Tower[i].position_y == objY){
+							return 0;
+						}
+					}
+
+					//将新建的塔的种类，坐标，等级存储到Tower数组里，并声明了Tower中的攻击范围为一数组
+					var len = Tower.length;
+					Tower[len] = new Object();
+					Tower[len].kind = add_tower_kind;
+					Tower[len].level = 0;
+					Tower[len].position_x = objX;
+					Tower[len].position_y = objY;
+					Tower[len].attackrange = new Array(); 
+					add_tower = false;//关闭箭塔状态
+					gold -= Tower_kind[add_tower_kind].level[0].price;//扣除修建塔的费用
+					$('.gold p').html(gold);//更新当前金钱显示
+					$('.map').css("cursor","auto");//将鼠标样式置回初始样式
+
+					//该塔能攻击到的格子数量
+					var num_attackpoint = 0;
+
+					//根据不同的塔的种类，计算该类塔的攻击范围，再将攻击范围内的道路编号赋值到Tower[len].attackrange中，编号从大到小排列
+					if (Tower[len].kind == 1) {
+						var x_start = (Tower[len].position_x-2)>0? (Tower[len].position_x-2):0,
+						x_final = (Tower[len].position_x+2)<11? (Tower[len].position_x + 2):11,
+						y_start = (Tower[len].position_y-2)>0? (Tower[len].position_y - 2):0,
+						y_final = (Tower[len].position_y+2)<7? (Tower[len].position_y + 2):7;
+
+						//由终点到起点遍历Way[]，检查是否在攻击范围内，如果在，则将Way[]的编号添加到数组Tower[len].attackrange[]中，这样同时实现了Tower[len].attackrange[]由大到小排序
+						for (var i = Way.length - 1; i >= 0; i--) {
+							if (Way[i].position_x >= x_start && 
+								Way[i].position_x <= x_final && 
+								Way[i].position_y >= y_start &&
+								Way[i].position_y <= y_final) {
+								Tower[len].attackrange[num_attackpoint] = i;
+								num_attackpoint++;
+							}
+						}
+					}else if (Tower[len].kind == 0) {
+						var x_start = (Tower[len].position_x-1)>0? (Tower[len].position_x-1):0,
+						x_final = (Tower[len].position_x+1)<11? (Tower[len].position_x + 1):11,
+						y_start = (Tower[len].position_y-1)>0? (Tower[len].position_y - 1):0,
+						y_final = (Tower[len].position_y+1)<7? (Tower[len].position_y + 1):7;
+
+						//由终点到起点遍历Way[]，检查是否在攻击范围内，如果在，则将Way[]的编号添加到数组Tower[len].attackrange[]中，这样同时实现了Tower[len].attackrange[]由大到小排序
+						for (var i = Way.length - 1; i >= 0; i--) {
+							if (Way[i].position_x >= x_start && 
+								Way[i].position_x <= x_final && 
+								Way[i].position_y >= y_start &&
+								Way[i].position_y <= y_final) {
+								Tower[len].attackrange[num_attackpoint] = i;
+								num_attackpoint++;
+							}
+						}
+					}else if (Tower[len].kind == 2) {
+						var x_start = (Tower[len].position_x-1)>0? (Tower[len].position_x-1):0,
+						x_final = (Tower[len].position_x+1)<11? (Tower[len].position_x + 1):11,
+						y_start = (Tower[len].position_y-1)>0? (Tower[len].position_y - 1):0,
+						y_final = (Tower[len].position_y+1)<7? (Tower[len].position_y + 1):7;
+
+						//由终点到起点遍历Way[]，检查是否在攻击范围内，如果在，则将Way[]的编号添加到数组Tower[len].attackrange[]中，这样同时实现了Tower[len].attackrange[]由大到小排序
+						for (var i = Way.length - 1; i >= 0; i--) {
+							if (Way[i].position_x >= x_start && 
+								Way[i].position_x <= x_final && 
+								Way[i].position_y >= y_start &&
+								Way[i].position_y <= y_final) {
+								Tower[len].attackrange[num_attackpoint] = i;
+								num_attackpoint++;
+							}
+						}
+					}else if (Tower[len].kind == 3) {
+						var x= Tower[len].position_x,
+						y = Tower[len].position_y;
+
+						//由终点到起点遍历Way[]，检查是否在攻击范围内，如果在，则将Way[]的编号添加到数组Tower[len].attackrange[]中，这样同时实现了Tower[len].attackrange[]由大到小排序
+						for (var i = Way.length - 1; i >= 0; i--) {
+							if (Way[i].position_x == x || Way[i].position_y == y) {
+								Tower[len].attackrange[num_attackpoint] = i;
+								num_attackpoint++;
+							}
+						}
+					}
+
+					//将新加入的防御塔绘制到地图上
+					drawTower(len);
+				}else{
+					//金钱不足时提示
+					remindNotEnoughGold();
+				}						
+			}else{
+				//当并没用开启修建防御塔状态时，判断是否可以开启升级防御塔
+				//
+				var objTop = $(".map").css("top");//对象x位置
+				var objLeft = $(".map").css("left");//对象y位置
+					 
+				var mouseX = event.clientX+document.body.scrollLeft;//鼠标x位置
+				var mouseY = event.clientY+document.body.scrollTop;//鼠标y位置
+				//计算点击的相对位置
+				var objX = parseInt((mouseX-parseInt(objLeft))/80);
+				var objY = parseInt((mouseY-parseInt(objTop))/80);
+				//判定点击位置是否有防御塔，如果有，则显示升级和摧毁塔的UI界面
+				for (var i = 0; i < Tower.length; i++) {
+					if (Tower[i].position_x == objX && Tower[i].position_y == objY){
+						drawChangeTowerUI(i);
+					}
+				}				
+			}
+		}//添加新塔的函数，同时也是显示塔信息，升级摧毁界面的方法
+
+		function drawTower(){
+			var temp = arguments[0];
+			var tower_top = Tower[temp].position_y*80;
+			var tower_left = Tower[temp].position_x*80;
+			var tower_kind = Tower[temp].kind;
+			var str='<li class="tower_'+temp+' tower towerkind_'+tower_kind+'" style="position:absolute;top:'+tower_top+'px;left:'+tower_left+'px"><img src="';
+			//根据塔类型加上相应的图标地址
+			if (tower_kind == 1) {
+				str+='image/icon/tower1.png';
+			}else if (tower_kind == 0) {
+				str+='image/icon/tower0.png';
+			}else if (tower_kind == 2) {
+				str+='image/icon/tower2.png';
+			}else if (tower_kind == 3) {
+				str+='image/icon/tower3.png';
+			}
+			str+='" style="width:80px"></li>';
+			var towerdiv = $(str);
+			towerdiv.appendTo('.towers');
+		}//在指定位置绘制塔的函数
+
+		function towerAttack(){
+			for (var i = 0; i < Tower.length; i++) {
+
+				//判定塔的类型，由塔的类型造成相应的伤害类型和伤害值
+				if (Tower[i].kind == 1) {
+
+					//遍历攻击范围
+					for (var j = 0; j < Tower[i].attackrange.length; j++) {
+
+						//当遇到攻击范围内第一个有怪物的格子时
+						if(Way[Tower[i].attackrange[j]].enemyid[0] != -1) {
+							var temp = Way[Tower[i].attackrange[j]].enemyid[0];
+
+							var tempBullet = new Object();
+							tempBullet.power = Tower_kind[1].level[Tower[i].level].power;
+							tempBullet.aim = temp;
+							tempBullet.speed = 4;
+							tempBullet.absoluteX = Tower[i].position_x*80+40;
+							tempBullet.absoluteY = Tower[i].position_y*80+40;
+							Bullets.push(tempBullet);
+
+							//对该怪物造成伤害
+							Enemy[temp].lifepoint -= Tower_kind[1].level[Tower[i].level].power;
+						//	Enemy[temp].health -= 10;
+
+							//如果怪物死亡，重写相应的Way[].enemyid数组
+							if (Enemy[temp].lifepoint <= 0) {
+								Enemy[temp].lifepoint = 0;
+							
+								if (Way[Tower[i].attackrange[j]].enemyid[1] != undefined) {
+									Way[Tower[i].attackrange[j]].enemyid.splice(0,1);
+								}else{
+									Way[Tower[i].attackrange[j]].enemyid[0] = -1;
+								}
+							}
+
+							/*//当剩余怪物数量为0时，加入下一波怪
+							if (num_AliveEnemy == 0)
+							{
+								Wave++;
+								addEnemy();
+							}*/
+							break;
+						}
+					}
+				}
+				else if(Tower[i].kind == 0){
+					for (var j = 0; j < Tower[i].attackrange.length; j++) {
+						if(Way[Tower[i].attackrange[j]].enemyid[0] != -1) {
+							var tempFirecircle = new Object();
+							tempFirecircle.power = Tower_kind[2].level[Tower[i].level].power;
+							tempFirecircle.speed = 6;
+							tempFirecircle.absoluteX = Tower[i].position_x*80+40;
+							tempFirecircle.absoluteY = Tower[i].position_y*80+40;
+							tempFirecircle.radius = 0;
+							tempFirecircle.kind = "fire";
+							tempFirecircle.attackrange = Tower[i].attackrange;
+							Circles.push(tempFirecircle);
+							break;		
+						}
+					}
+				}
+				else if(Tower[i].kind == 2){
+					for (var j = 0; j < Tower[i].attackrange.length; j++) {
+						if(Way[Tower[i].attackrange[j]].enemyid[0] != -1) {
+							var tempIcecircle = new Object();
+							tempIcecircle.power = Tower_kind[2].level[Tower[i].level].power;
+							tempIcecircle.speed = 6;
+							tempIcecircle.absoluteX = Tower[i].position_x*80+40;
+							tempIcecircle.absoluteY = Tower[i].position_y*80+40;
+							tempIcecircle.radius = 0;
+							tempIcecircle.kind = "ice";
+							tempIcecircle.attackrange = Tower[i].attackrange;
+							Circles.push(tempIcecircle);
+							break;
+						}
+					}
+				}
+				else if(Tower[i].kind == 3){
+					for (var j = 0; j < Tower[i].attackrange.length; j++) {
+						if(Way[Tower[i].attackrange[j]].enemyid[0] != -1) {
+							drawCross(i);
+							break;
+						}
+					}
+					for (var j = 0; j < Tower[i].attackrange.length; j++) {
+						var tempIdarray = Way[Tower[i].attackrange[j]].enemyid;
+						
+						if(tempIdarray[0] != -1) {
+							for (var k = 0; k < tempIdarray.length; k++) {
+							 	if(Enemy[tempIdarray[k]].health > 0){
+							 		Enemy[tempIdarray[k]].health -= Tower_kind[3].level[Tower[i].level].power;
+							 		Enemy[tempIdarray[k]].lifepoint -= Tower_kind[3].level[Tower[i].level].power;
+							 		if (Enemy[tempIdarray[k]].health <= 0){
+							 			num_AliveEnemy --;
+							 		}
+							 	}
+							}
+						}
+					}
+				}
+			}
+			drawEnemy();
+		}//塔发出攻击动作，按塔的种类有不同操作，普通塔预判其攻击对象，添加子弹对象，范围塔添加圆圈的对象，直线塔直接结算伤害并且调用绘制
+
+		function initEnemy(wave){
+			//获取Waveinfo数组中的数据，初始化敌人
+			num_enemyOnMap = 0;
+			num_AliveEnemy = Waveinfo[wave].number;
+			for(var i = 0; i < Waveinfo[wave].number; i++){
+				Enemy[i] = new Object();
+				Enemy[i].health = Waveinfo[wave].health;
+				Enemy[i].lifepoint = Waveinfo[wave].health;
+				Enemy[i].speed = Waveinfo[wave].speed;
+				Enemy[i].position = -1;
+				Enemy[i].accurateposition = -1;
+				Enemy[i].absoluteX = 0;
+				Enemy[i].absoluteY = 0;
+				Enemy[i].frozenbuff = false;
+			}
+		}//新的一波，初始化新的敌人
+
+		function addEnemy(){
+			if (num_enemyOnMap < Waveinfo[wave].number) {
+				Enemy[num_enemyOnMap].position = 0;
+				Enemy[num_enemyOnMap].accurateposition = 0.5;
+				Enemy[num_enemyOnMap].absoluteX = Way[0].position_x*80;
+				Enemy[num_enemyOnMap].absoluteY = Way[0].position_y*80;
+				num_enemyOnMap++;
+			}
+		}//往地图上加入新的敌人
+
+		function enemyMove(){
+			for (var i = 0; i < Way.length; i++) {
+				Way[i].enemyid = [-1];
+			}
+			var relativeX = 0;
+			var relativeY = 0;
+			for (var i = 0; i < num_enemyOnMap; i++){
+				if (Enemy[i].health > 0) {
+					Enemy[i].position += (Enemy[i].accurateposition+Enemy[i].speed*(Enemy[i].frozenbuff?0.5:1));
+					Enemy[i].accurateposition = Enemy[i].position - parseInt(Enemy[i].position);
+					Enemy[i].position = parseInt(Enemy[i].position);
+					if (Enemy[i].position >= Way.length-1 && Enemy[i].accurateposition > 0.5) {
+						Enemy[i].health = 0;
+						num_AliveEnemy--;
+						HP--;
+						$('.HP p').html(HP);
+					}//怪物到达终点！
+					else{
+						//先计算每个怪物的绝对位置
+						if(Enemy[i].accurateposition > 0.5 && Enemy[i].position < Way.length){
+							relativeX = (Enemy[i].accurateposition-0.5)*(Way[Enemy[i].position+1].position_x-Way[Enemy[i].position].position_x)*80;
+							relativeY = (Enemy[i].accurateposition-0.5)*(Way[Enemy[i].position+1].position_y-Way[Enemy[i].position].position_y)*80;
+						}
+						else if(Enemy[i].accurateposition < 0.5 && Enemy[i].position > 0){
+							relativeX = (Enemy[i].accurateposition-0.5)*(Way[Enemy[i].position].position_x-Way[Enemy[i].position-1].position_x)*80;
+							relativeY = (Enemy[i].accurateposition-0.5)*(Way[Enemy[i].position].position_y-Way[Enemy[i].position-1].position_y)*80;
+						}
+						Enemy[i].absoluteX = Way[Enemy[i].position].position_x*80+relativeX;
+						Enemy[i].absoluteY = Way[Enemy[i].position].position_y*80+relativeY;
+						relativeX = 0;
+						relativeY = 0;
+
+						//再把对应格子添上怪物id
+						if(Enemy[i].lifepoint > 0){
+							if (Way[Enemy[i].position].enemyid[0]  == -1){
+								Way[Enemy[i].position].enemyid[0] = i;
+							}
+							else{
+								Way[Enemy[i].position].enemyid.push(i);
+							}
+						}
+					}
+				}
+			}
+			drawEnemy();
+		}//图上怪物的移动
+
+		function drawEnemy(){
+			$('.enemys').empty();
+			for (var i = 0; i < num_enemyOnMap; i++){
+				if (Enemy[i].health > 0) {
+					drawSingleEnemy(Enemy[i].absoluteX,Enemy[i].absoluteY,i);
+				}
+			}
+		}//图上怪物的绘制
+
+		function drawSingleEnemy(absoluteX,absoluteY,i){
+			var enemydiv = $('<li>');
+			var max_health = Waveinfo[wave].health;
+			var life_length = (Enemy[i].health/max_health)*64;
+			
+			enemydiv.attr({
+				"class":"enemy",
+				"style":"position:absolute;left:"+(absoluteX+8)+"px;top:"+(absoluteY+10)+"px"
+			});
+			$('<div style="height:6px;width:'+life_length+'px;position:absolute;top:-6px;left:0px;background:red;border-radius:3px;">').appendTo(enemydiv);
+			//判定该敌人是否有冰冻减速状态，使用不同的图片
+			if(Enemy[i].frozenbuff == false){
+				$('<img style="width:64px;height:51.2px;"/>').attr({"src":"image/icon/enemy1.png"}).appendTo(enemydiv);
+			}
+			else if(Enemy[i].frozenbuff == true){
+				$('<img style="width:64px;height:51.2px;"/>').attr({"src":"image/icon/enemy1_frozen.png"}).appendTo(enemydiv);
+			}
+			enemydiv.appendTo('.enemys');
+		}//单个敌人的绘制
+		
+		function bulletMove(){
+			for (var i = 0; i < Bullets.length; i++) {
+				var disX = Bullets[i].absoluteX-(Enemy[Bullets[i].aim].absoluteX+48);
+				var disY = Bullets[i].absoluteY-(Enemy[Bullets[i].aim].absoluteY+42);
+				var distance = Math.sqrt(disX*disX+disY*disY);
+				if (distance < 30) {
+					if(Enemy[Bullets[i].aim].health>0){
+						Enemy[Bullets[i].aim].health -= Bullets[i].power;
+						if (Enemy[Bullets[i].aim].health <= 0) {
+							gold += 10;
+							$('.gold p').html(gold);
+							num_AliveEnemy--;
+						}
+					}
+					Bullets.splice(i,1);
+					i--;
+				}
+				else{
+					Bullets[i].absoluteX -= Bullets[i].speed/distance*disX;
+					Bullets[i].absoluteY -= Bullets[i].speed/distance*disY;
+				}
+			}
+			drawBullet();
+		}//子弹的移动，使得子弹始终追踪目标进行移动
+
+		function drawBullet(){
+			$('.bullets').empty();
+			for (var i = 0; i < Bullets.length; i++){
+					drawSingleBullet(Bullets[i].absoluteX,Bullets[i].absoluteY);
+			}
+		}//子弹的绘制
+
+		function drawSingleBullet(absoluteX,absoluteY){
+			var bulletdiv = $('<li>');
+			bulletdiv.attr({
+				"class":"bullet",
+				"style":"border:1px solid #000;border-radius:50%;background-color:#59F261;width:16px;height:16px;position:absolute;left:"+(absoluteX-5)+"px;top:"+(absoluteY-5)+"px"
+			});
+			bulletdiv.appendTo('.bullets');
+		}//单个子弹的绘制
+
+		function circleMove(){
+			for (var i = 0; i < Circles.length; i++) {
+				if (Circles[i].radius >= 96) {
+					for (var j = 0; j < Circles[i].attackrange.length; j++) {
+						var tempIdarray = Way[Circles[i].attackrange[j]].enemyid;
+						if (tempIdarray[0] != -1){
+							for (var k = 0; k < tempIdarray.length; k++) {
+								if(Enemy[tempIdarray[k]].health>0){
+									Enemy[tempIdarray[k]].health -= Circles[i].power;
+									Enemy[tempIdarray[k]].lifepoint -= Circles[i].power;
+									if (Circles[i].kind === "ice" && Enemy[tempIdarray[k]].frozenbuff == false) {
+										Enemy[tempIdarray[k]].frozenbuff = true;
+										setTimeout('speedRecover('+tempIdarray[k]+')',2000);
+									}
+									if (Enemy[tempIdarray[k]].health <= 0) {
+										gold += 10;
+										$('.gold p').html(gold);
+										num_AliveEnemy--;
+									}
+								}
+							}
+						} 	
+					}
+					Circles.splice(i,1);
+					i--;
+				}
+				else{
+					Circles[i].radius += Circles[i].speed;
+				}
+			}
+			drawCircle();
+		}//火圈/减速圈的移动
+
+		function drawCircle(){
+			$('.circles').empty();
+			for (var i = 0; i < Circles.length; i++){
+					drawSingleCircle(Circles[i].absoluteX,Circles[i].absoluteY,Circles[i].radius,Circles[i].kind);
+			}
+		}//火圈/减速圈的绘制
+
+		function drawSingleCircle(CabsoluteX,CabsoluteY,radius,kind){
+			var absoluteX = CabsoluteX-radius;
+			var absoluteY = CabsoluteY-radius;
+			if(kind === "fire"){
+				var circlediv = $('<li>');
+				circlediv.attr({
+				"class":"circle",
+				"style":"pointer-events:none;overflow:hidden;border:5px solid red;border-radius:50%;width:"+(2*radius)+"px;height:"+(2*radius)+"px;left:"+absoluteX+"px;top:"+absoluteY+"px"
+				});
+			}
+			else if(kind === "ice"){
+				var circlediv = $('<li>');
+				circlediv.attr({
+				"class":"circle",
+				"style":"pointer-events:none;overflow:hidden;border:5px dashed blue;border-radius:50%;width:"+(2*radius)+"px;height:"+(2*radius)+"px;left:"+absoluteX+"px;top:"+absoluteY+"px"
+				});
+			}
+			circlediv.appendTo('.circles');
+		}//单个火圈/冰冻圈的绘制
+
+		function speedRecover(enemyid){
+			Enemy[enemyid].frozenbuff = false;
+		}//减速状态恢复
+
+		function speedUpRecover(){
+			speedUpFlag = false;
+		}//加攻速状态恢复
+
+		function drawCross(towerid){
+			var vCross = $('<li>');
+			var hCross = $('<li>');
+			vCross.attr({"class":"cross","style":"pointer-events:none;opacity:0.7;border:solid 6px #7700FF;background-color:#e165fd;height:640px;width:8px;left:"+(Tower[towerid].position_x*80+34)+"px;top:0px"});
+			hCross.attr({"class":"cross","style":"pointer-events:none;opacity:0.7;border:solid 6px #7700FF;background-color:#e165fd ;height:8px;width:960px;left:0px;top:"+(Tower[towerid].position_y*80+34)+"px"});
+			vCross.appendTo($('.crosses'));
+			hCross.appendTo($('.crosses'));
+			vCross.fadeOut(200,function(){vCross.remove();});
+			hCross.fadeOut(200,function(){hCross.remove();});
+		}//绘制紫色塔的十字形激光
+
+		function remindNotEnoughGold(){
+			var temp = "#remind_gold";
+			$('<img id="remind_gold" style="opacity:1" src="image/remind_gold.png">').appendTo($('.map'));
+			fadeoutRemind(temp);//淡化提示
+		}//金钱不足的提示
+
+		function fadeoutRemind(){
+			var temp = arguments[0];
+			var temp_opacity = $(temp).css("opacity");
+			$(temp).css("opacity",temp_opacity - 0.05);
+			if (temp_opacity >= 0.1) {
+				setTimeout('fadeoutRemind("'+temp+'")',100);
+			}else{
+				$(temp).remove();
+			}
+		}//金钱不足提示的淡化效果
+
+		function drawChangeTowerUI(i){
+			if (change_tower == false) {
+				change_tower = true;
+				change_tower_number = i;
+
+				//绘制正在查看的塔的种类图标和等级图标
+				var change_tower_kind = Tower[i].kind;
+				var change_tower_level = Tower[i].level + 1;
+				$('<img class="change_tower_icon" src="image/icon/tower'+change_tower_kind+'.png"/>').appendTo($('.changeTowerUI'));
+				for (var j = 0; j < change_tower_level; j++) {
+					$($('.showlevel')[j]).attr('src','image/icon/level_current.png');
+				}
+				$('.changeTowerUI').css('display','block');
+			}else{
+				//如果已经打开一个塔的修改界面，点击地图上其他的塔，可以将显示的界面更新到最新点击的塔
+				closeChangeTowerUI();
+				drawChangeTowerUI(i);
+			}
+		}//显示修改塔查看信息，升级和摧毁的界面
+
+		function closeChangeTowerUI(){
+			$('.change_tower_icon').remove();
+			for (var j = 0; j < 3; j++) {
+					$($('.showlevel')[j]).attr('src','image/icon/level_remaining.png');
+				}
+			$('.changeTowerUI').css('display','none');
+			change_tower = false;
+		}//关闭修改塔查看信息，升级和摧毁的界面
+
+		function towerLevelUp(){
+			if (Tower[change_tower_number].level < 2) {
+				var gold_needed = Tower_kind[Tower[change_tower_number].kind].level[Tower[change_tower_number].level + 1].price;
+				if (gold >= gold_needed) {
+					gold-=gold_needed;
+					$('.gold p').html(gold);
+					Tower[change_tower_number].level++;
+					for (var j = 0; j <= Tower[change_tower_number].level; j++) {
+						$($('.showlevel')[j]).attr('src','image/icon/level_current.png');
+						//更新信息显示界面的等级贴图
+					}
+				}else{
+					//提示金钱不足
+					remindNotEnoughGold();
+				}
+			}else{
+				//提示塔已经升级到最高等级
+				remindReachHighestLevel();
+			}
+		}//升级塔，若金钱不足或已经到达最高等级，给出提示
+
+		function deleteTower(){
+			$($('.tower')[change_tower_number]).remove();//从绘制的地图中去除摧毁的防御塔
+			Tower.splice(change_tower_number, 1);//从记录防御塔信息的数组中删去摧毁的塔的信息
+			closeChangeTowerUI();//关闭升级塔的界面
+		}//移除防御塔
+
+		function remindReachHighestLevel(){
+			var temp = "#remind_level";
+			$('<img id="remind_level" style="opacity:1" src="image/remind_level.png">').appendTo($('.map'));
+			fadeoutRemind(temp);
+		}//等级已最高的提示
+
+		$(function(){
+			$(".map").click(function(){addTower();});
+		});//给地图添加点击位置添加塔的事件
+
+		$(function(){
+			$('#tower_1').click(function(){
+				if(add_tower == false){
+					add_tower = true
+
+					//开启修建防御塔状态时，鼠标移到地图上时会改变鼠标光标样式为即将修建塔的种类的样式
+					$('.map').css("cursor","url('image/icon/tower1.ico'),auto");
+					add_tower_kind=1;					
+				}else{
+					//再次点击后关闭修建防御塔的状态
+					add_tower=false;
+					$('.map').css("cursor","auto");
+				}
+				
+			});
+		});//点击加1号塔按钮后的事件
+
+		$(function(){
+			$('#tower_0').click(function(){
+				if(add_tower == false){
+					add_tower = true
+					$('.map').css("cursor","url('image/icon/tower0.ico'),auto");
+					add_tower_kind=0;
+				}else{
+					add_tower=false;
+					$('.map').css("cursor","auto");
+				}
+				
+			});
+		});//点击加0号塔按钮后的事件
+
+		$(function(){
+			$('#tower_2').click(function(){
+				if(add_tower == false){
+					add_tower = true
+					$('.map').css("cursor","url('image/icon/tower2.ico'),auto");
+					add_tower_kind=2;
+				}else{
+					add_tower=false;
+					$('.map').css("cursor","auto");
+				}
+				
+			});
+		});//点击加2号塔按钮后的事件
+
+		$(function(){
+			$('#tower_3').click(function(){
+				if(add_tower == false){
+					add_tower = true
+					$('.map').css("cursor","url('image/icon/tower3.ico'),auto");
+					add_tower_kind=3;
+				}else{
+					add_tower=false;
+					$('.map').css("cursor","auto");
+				}			
+			});
+		});//点击加3号塔按钮后的事件
+
+		$(function(){
+			$('#skill_0').click(function(){
+				if(gold >= skill_0_price){
+					gold -= skill_0_price;
+					$('.gold p').html(gold);
+					for(var i = 0; i < Enemy.length; i++){
+						if (Enemy[i].health > 0){
+							Enemy[i].frozenbuff = true;
+							setTimeout('speedRecover('+i+')',2000);
+						}
+					}
+				}
+				else{
+					remindNotEnoughGold();
+				}
+			});
+		});//点击冰封禁制技能按钮后的事件
+
+		$(function(){
+			$('#skill_1').click(function(){
+				if(gold >= skill_1_price){
+					gold -= skill_1_price;
+					$('.gold p').html(gold);
+					speedUpFlag = true;
+					setTimeout('speedUpRecover()',2000);
+				}
+				else{
+					remindNotEnoughGold();
+				}
+			});
+		});//点击集中火力技能按钮后的事件
+
+		$(function(){
+			$('#start').click(function(){
+				$('#music').append('<embed id="bg_music"  loop=true  volume="60" autostart=true hidden=true src="HeroesWithin.mp3" />');
+				$('#shade').fadeOut(1000,function(){
+					var tempMessage = $('<div class="message">');
+					tempMessage.text("第一波在5秒后");
+					tempMessage.appendTo($(".map"));
+					tempMessage.fadeOut(5000,function(){startGame();tempMessage.remove();});});
+			});
+		});//初始时点击开始按钮的事件
+
+		$(function(){
+			$('#test').click(function(){
+				$('#music').append('<embed id="bg_music"  loop=true  volume="60" autostart=true hidden=true src="HeroesWithin.mp3" />');
+				$('#shade').fadeOut(1000,function(){
+					testFlag=true;
+					var tempMessage = $('<div class="message">');
+					tempMessage.text("第一波在5秒后");
+					tempMessage.appendTo($(".map"));
+					tempMessage.fadeOut(5000,function(){startGame();tempMessage.remove();});});
+			});
+		});//初始时点击充值按钮的事件
+
+		$(function(){
+			$("body").keydown(function(e){
+				if (e.which == 32 || e.keyCode == 32) {
+					if (pauseFlag == false) {
+						clearDelays();
+						pauseFlag = true;
+					}
+					else if(pauseFlag == true){
+						startLoops();
+						pauseFlag = false;
+					}
+				}
+			});
+		});//按空格键暂停的事件
+
+		//以下部分为主要的延时递归调用函数
+		var adddelay;
+		var movedelay;
+		var bulletdelay;
+		var circledelay;
+		var towerattackdelay;
+		var checkloop;
+
+		function addEnemyLoop(){
+			addEnemy();
+			var adddelay = setTimeout('addEnemyLoop()',Waveinfo[wave].addNextDelay);
+			if (num_enemyOnMap >= Waveinfo[wave].number || HP <= 0) {clearTimeout(adddelay);}
+		}//间隔一定时间，向enemy数组中加新enemy
+
+		function moveEnemyLoop(){
+			enemyMove();
+			movedelay = setTimeout('moveEnemyLoop()',100);
+			if (HP <= 0 || num_AliveEnemy <= 0) {clearTimeout(movedelay);}
+		}//间隔一定时间，怪物向前移动
+
+		function moveBulletLoop(){
+			bulletMove();
+			bulletdelay = setTimeout('moveBulletLoop()',20);
+			if (HP <= 0 || num_AliveEnemy <= 0) {clearTimeout(bulletdelay);}
+		}//间隔一定时间，子弹移动一定距离
+
+		function moveCircleLoop(){
+			circleMove();
+			circledelay = setTimeout('moveCircleLoop()',20);
+			if (HP <= 0 || num_AliveEnemy <= 0) {clearTimeout(circledelay);}
+		}//间隔一定时间，范围攻击扩大一定范围
+
+		function towerattackLoop(){
+			towerAttack();
+			towerattackdelay = setTimeout('towerattackLoop()',300*(speedUpFlag?0.5:1));
+			if (HP <= 0 || num_AliveEnemy <= 0) {clearTimeout(towerattackdelay);}
+		}//间隔一定时间，塔发出攻击动作
+
+		function startGame(){
+			mainLoop(wave);
+			checkloop = setInterval('checkWaveEnd()',10);
+		}//游戏开始，调用主循环，开始检查游戏终止
+
+		function checkWaveEnd(){
+			if (HP <= 0) {
+				clearDelays();
+				clearInterval(checkloop);
+				var tempMessage = $('<div class="message">');
+				tempMessage.text("你输了，点击重新开始");
+				tempMessage.appendTo($(".map"));
+				tempMessage.click(function(){
+					HP = 5;
+					gold = 40;
+					wave = 0;
+					$('.towers').empty();
+					startGame();
+					tempMessage.remove();
+				});
+			}
+			else if(HP > 0 && num_AliveEnemy <= 0){
+				drawEnemy();
+				clearDelays();
+				wave++;
+				if (wave >= Waveinfo.length) {
+					clearInterval(checkloop);
+					var tempMessage = $('<div class="message">');
+					tempMessage.text("恭喜过关，点击重新开始");
+					tempMessage.appendTo($(".map"));
+					tempMessage.click(function(){
+						HP = 5;
+						gold = 40;
+						wave = 0;
+						$('.towers').empty();
+						startGame();
+						tempMessage.remove();
+					});
+				}
+				else{
+					clearInterval(checkloop);
+					Bullets = [];
+					Circles = [];
+					drawCircle();
+					drawBullet();
+					var tempMessage = $('<div class="message">');
+					tempMessage.text("下一波在5秒后");
+					tempMessage.appendTo($(".map"));
+					tempMessage.fadeOut(5000,function(){startGame();tempMessage.remove();});
+				}
+			}
+		}//检查游戏是否应终止，一波通关进入下一关，失败/胜利显示重新开始按钮，
+
+		function clearDelays(){
+			clearTimeout(adddelay)
+			clearTimeout(movedelay);
+			clearTimeout(bulletdelay);
+			clearTimeout(circledelay);
+			clearTimeout(towerattackdelay);
+		}//清除所有循环
+
+		function mainLoop(nowWave){
+			Bullets = [];
+			Circles = [];
+			if (nowWave == 0) {
+				Tower = [];
+			}
+			$('.HP p').html(HP);
+			if(testFlag) {gold = 9999;testFlag=false;}
+			$('.gold p').html(gold);
+			$('.wave p').html(wave+1);
+			initEnemy(nowWave);
+			startLoops();
+		}//主循环
+
+		function startLoops(){
+			addEnemyLoop();
+			moveEnemyLoop();
+			moveBulletLoop();
+			moveCircleLoop();
+			towerattackLoop();
+		}//开始所有循环
+	</script>
+</head>
+<body>
+	<div id="music"></div>
+	<div id="shade">
+		<header>
+			<h1>Defence of Tower Alistar</h1>
+			<h2>制作人：&nbsp&nbsp刘季青&nbsp&nbsp竺俊超</h2>
+		</header>
+		<button id="start">开始</button>
+		<button id="test">充值</button>
+	</div>
+	<div id="container">
+		<div class="skills">
+			<div id="skill_0" class="icon" style="top:20px;left:10px">
+				<img title="冰封禁制" src="image/icon/skill0.png" style="position:absolute;width:80px;cursor:pointer">
+			</div>
+			<div id="skill_1" class="icon" style="top:120px;left:10px">
+				<img title="集中火力" src="image/icon/skill1.png" style="position:absolute;width:80px;cursor:pointer">
+			</div>
+			<div id="tower_0" class="icon" style="top:280px;left:10px">
+				<img title="建造炮塔0" src="image/icon/AddTower0.png" style="position:absolute;width:80px;cursor:pointer">
+			</div>
+			<div id="tower_1" class="icon" style="top:380px;left:10px">
+				<img title="建造炮塔1" src="image/icon/AddTower1.png" style="position:absolute;width:80px;cursor:pointer">
+			</div>
+			<div id="tower_2" class="icon" style="top:480px;left:10px">
+				<img title="建造炮塔2" src="image/icon/AddTower2.png" style="position:absolute;width:80px;cursor:pointer">
+			</div>
+			<div id="tower_3" class="icon" style="top:580px;left:10px">
+				<img title="建造炮塔3" src="image/icon/AddTower3.png" style="position:absolute;width:80px;cursor:pointer">
+			</div>
+			<!-- <div class="icon" onclick="towerAttack();" style="background:#000;left:10px;top:620px;cursor:pointer"></div> -->
+		</div>
+		<div class="map" >
+			<ul class="blocks">		
+			</ul>
+			<ul class="towers">		
+			</ul>
+			<ul class="enemys">		
+			</ul>
+			<ul class="bullets">
+			</ul>
+			<ul class="circles">
+			</ul>
+			<ul class="crosses">
+			</ul>
+			<div class="changeTowerUI">
+				<img class="icon" title="关闭" onclick="closeChangeTowerUI();" style="border:0px;height:45px;top:10px;right:10px;" src="image/icon/closeChangeTowerUI.png"/>
+				<img class="icon" title="升级防御塔" onclick="towerLevelUp();" style="height:60px;top:20px;left:20px;" src="image/icon/tower_levelup.png"/>
+				<img class="icon" title="拆除防御塔" onclick="deleteTower();" style="height:60px;top:20px;left:110px;" src="image/icon/tower_delete.png"/>
+				<img class="showlevel showlevel1" style="left:100px" src="image/icon/level_remaining.png">
+				<img class="showlevel showlevel2" style="left:160px" src="image/icon/level_remaining.png">
+				<img class="showlevel showlevel3" style="left:220px" src="image/icon/level_remaining.png">
+			</div>
+		</div>
+		<div class="status">
+			<div class="HP" style="top:20px">
+				<img src="image/icon/HP.png" style="border-radius:50%;position:absolute;left:-15px;top:-15px;width:80px">
+				<p></p>
+			</div>
+			<div class="gold" style="top:120px">
+				<img src="image/icon/gold.png" style="border-radius:50%;position:absolute;left:-15px;top:-15px;width:80px">
+				<p></p>
+			</div>
+			<div class="wave" style="top:220px">
+				<img src="image/icon/wave.png" style="border-radius:50%;position:absolute;left:-15px;top:-15px;width:80px">
+				<p></p>
+			</div>
+		</div>
+		<div class="instruction">
+			<img style="top:5px" src="image/icon/tower0.png"/>
+			<div style="top:5px">防御塔,范围型攻击,花费:40G;60G;80G</div>
+			<img style="top:40px" src="image/icon/tower1.png"/>
+			<div style="top:40px">防御塔,单体型攻击,花费:20G;30G;50G</div>
+			<img style="top:75px" src="image/icon/tower2.png"/>
+			<div style="top:75px">防御塔,范围型攻击,攻击带有减速效果,花费:100G;50G;50G</div>
+			<img style="top:110px" src="image/icon/tower3.png"/>
+			<div style="top:110px">防御塔,直线型攻击,可攻击所在行列,花费:80G;100G;120G</div>
+			<img style="top:145px" src="image/icon/skill0.png"/>
+			<div style="top:145px">技能"冰封禁制",在短时间内冻结所有怪物行动,花费:40G</div>
+			<img style="top:180px" src="image/icon/skill1.png"/>
+			<div style="top:180px">技能"集中火力",在短时间内提高防御塔攻速,花费:40G</div>
+			<img style="top:215px;border-radius:50%" src="image/icon/HP.png"/>
+			<div style="top:215px">状态:生命值,生命值为0游戏结束</div>
+			<img style="top:250px;border-radius:50%" src="image/icon/gold.png"/>
+			<div style="top:250px">状态:金钱,通过消费金钱建造防御塔和使用技能</div>
+			<img style="top:285px;border-radius:50%" src="image/icon/wave.png"/>
+			<div style="top:285px">状态:怪物波数,即关卡数,随着波数改变怪物质量会提升</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+		drawMap();//加载时先绘制地图
+	</script>
+</body>
+</html>
