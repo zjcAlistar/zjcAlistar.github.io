@@ -45,9 +45,9 @@ h2
 <div id="controller">
 	<button id="startGame">开始</button>
 	<button id="pauseGame">暂停</button>
-	<input id="originCellNum" value="1000"></input>
-	<button id="resetGame">重置细胞数</button>
-	<input id="speedRatio" value="1"></input>
+	<input id="originCellNum" value="1000" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"></input>
+	<button id="resetGame" >重置细胞数</button>
+	<input id="speedRatio" value="1" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"></input>
 	<button id="changeSpeed">变速</button>
 	<div>高度
 		<select id="gridHeight">
@@ -240,18 +240,25 @@ btnReset.addEventListener("click",function(){
 		runningFlag = false;
 	}
 	curCellNum = document.getElementById("originCellNum").value;
-	generationID = 0;
-	document.getElementById("generationID").innerHTML = "当前世代数:0";
-	document.getElementById("curCellNum").innerHTML = "当前活细胞数:"+curCellNum;
-	initMap();
-	generateLifeRan(curCellNum);
-	refreshCanvas();
+	if (!isNaN(curCellNum)) {
+		generationID = 0;
+		document.getElementById("generationID").innerHTML = "当前世代数:0";
+		document.getElementById("curCellNum").innerHTML = "当前活细胞数:"+curCellNum;
+		initMap();
+		generateLifeRan(curCellNum);
+		refreshCanvas();
+	}
+	else{
+		alert("非法输入");
+		
+	}
+	
 });
 
 var btnChange = document.getElementById("changeSpeed");
 btnChange.addEventListener("click",function(){
 	var tempSpeedRatio = document.getElementById("speedRatio").value;
-	if (tempSpeedRatio < 0.1 || tempSpeedRatio > 10) {
+	if (isNaN(tempSpeedRatio) || tempSpeedRatio < 0.1 || tempSpeedRatio > 10) {
 		alert("变速系数须在0.1~10之间");
 	}
 	else{
