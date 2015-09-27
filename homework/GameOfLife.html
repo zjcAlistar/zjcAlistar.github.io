@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>GameOfLife</title>
+<style type="text/css">
+body
+{
+	font-family: "microsoft YaHei";
+	background-color: rgb(247,238,214);
+	margin: 10px;
+	padding: 5px;
+} 
+button
+{
+	padding: 2px;
+}
+div
+{
+	padding: 2px;
+}
+h1
+{
+	margin-left: 100px;
+}
+h2
+{
+	margin-left: 60px;
+}
+#maintable
+{
+	margin-top: 20px;
+}
+</style>
+</head>
+
+
+
+<body>
+<div id="mtitle">
+	<h1>生命游戏</h1>
+	<h2>By 竺俊超 曹竞鑫</h2>
+</div>
+<div id="controller">
+	<button id="startGame">开始</button>
+	<button id="pauseGame">暂停</button>
+	<input id="originCellNum" value="1000"></input>
+	<button id="resetGame">重置细胞数</button>
+	<input id="speedRatio" value="1"></input>
+	<button id="changeSpeed">变速</button>
+	<div>高度
+		<select id="gridHeight">
+			<option value="25">25</option>
+			<option value="50" selected="selected">50</option>
+			<option value="100">100</option>
+		</select>
+		宽度
+		<select id="gridWidth">
+			<option value="25">25</option>
+			<option value="50" selected="selected">50</option>
+			<option value="100">100</option>
+			<option value="150">150</option>
+			<option value="200">200</option>
+		</select>
+		<button id="changeTable">重置地图</button>
+		<button id="nextGeneration">下一代</button>
+		<div id="generationID">当前世代数:0</div>
+		<div id="curCellNum">当前活细胞数:1000</div>
+	</div>
+	
+	
+	
+</div>
+<canvas id="maintable" height="500px" width="500px">
+</canvas>
+
+
+<script type="text/javascript">
+
+var map;
+var dataMap;
+var mapWidth;
+var mapHeight;
+var mainLoop;
+var runningFlag;
+var speedRatio;
+var generationID;
+var curCellNum;
+
+function initMap(){
+	for(var i = 0; i < mapHeight; i++){
+		for (var j = 0; j < mapWidth; j++) {
+			map[i][j] = "dead";
+			dataMap[i][j] = 0;
+		}
+	}
+}
+
+function createMap(mmapWidth,mmapHeight){
+	mapWidth = mmapWidth;
+	mapHeight = mmapHeight;
+	map = new Array(mmapHeight);
+	dataMap = new Array(mmapHeight);
+	for(var i = 0; i < mmapHeight; i++){
+		map[i] = new Array(mmapWidth);
+		dataMap[i] = new Array(mmapWidth);
+	}
+}
+
+function generateLifeRan(cellNum){
+	var totalNum = mapHeight*mapWidth;
+	if(cellNum > totalNum){
+		alert("细胞个数太多");
+	}
+	else{
+		var counter = 0;
+		while(true){
+			var temp = Math.floor(Math.random()*totalNum);
+			var row = Math.floor(temp/mapWidth);
+			var col = temp%mapWidth;
+			if(map[row][col] == "dead"){
+				map[row][col] = "alive";
+				counter++;
+			}
+			if (counter >= cellNum) break;
+		}
+	}	
+}
+
+function refreshCanvas(){
+	var table = document.getElementById("maintable");
+	var context = table.getContext("2d");
+	context.clearRect(0,0,mapWidth*10,mapHeight*10);
+	for(var i = 0; i < mapHeight; i++){
+		for(var j = 0; j < mapWidth; j++){
+			if (map[i][j] == "alive") {
+				context.fillStyle = "#FF0000";
+				context.beginPath();
+				context.arc(j*10+5,i*10+5,4,0,Math.PI*2,true);
+				context.closePath();
+				context.fill();
+			}
+			else{
+				context.fillStyle = "#CDCDCD";
+				context.beginPath();
+				context.arc(j*10+5,i*10+5,4,0,Math.PI*2,true);
+				context.closePath();
+				context.fill();
+			}
+		}
+	}
+}
+
+function collectData(row, col){
+	dataMap[row][col] = 0;
+	for(var i = -1; i <= 1; i++){
+		for(var j = -1; j <= 1; j++){
+			if(row+i < 0 || row+i >= mapHeight || col+j < 0 || col+j >= mapWidth || (i==0 && j==0)) continue;
+			else{
+				if(map[row+i][col+j] == "alive") dataMap[row][col]++;
+			}
+		}
+	}
+}
+
+function willDieOrLive(row,col){
+	switch(dataMap[row][col]){
+		default:
+			map[row][col] = "dead";
+			break;
+		case 2:
+			map[row][col] = map[row][col];
+			break;
+		case 3:
+			map[row][col] = "alive";
+			break;
+	}
+}
+
+function newGeneration(){
+
+	for(var i = 0; i < mapHeight; i++){
+		for(var j = 0; j < mapWidth; j++){
+			collectData(i,j);
+		}
+	}
+
+	curCellNum = 0;
+	for(var i = 0; i < mapHeight; i++){
+		for(var j = 0; j < mapWidth; j++){
+			willDieOrLive(i,j);
+			if(map[i][j] == "alive") curCellNum++;
+		}
+	}
+}
+
+function loop(){
+	newGeneration();
+	generationID++;
+	document.getElementById("generationID").innerHTML = "当前世代数:"+generationID;
+	document.getElementById("curCellNum").innerHTML = "当前活细胞数:"+curCellNum;
+	refreshCanvas();
+	mainLoop = setTimeout('loop()',100/speedRatio);
+}
+
+function pause(){
+	clearTimeout(mainLoop);
+}
+
+
+
+
+var btnNext = document.getElementById("nextGeneration");
+btnNext.addEventListener("click",function(){
+	newGeneration();
+	refreshCanvas();
+});
+
+var btnStart = document.getElementById("startGame");
+btnStart.addEventListener("click",function(){
+	if(!runningFlag){
+		loop();
+		runningFlag = true;
+	}
+});
+
+var btnPause = document.getElementById("pauseGame");
+btnPause.addEventListener("click",function(){
+	if(runningFlag){
+		pause();
+		runningFlag = false;
+	}
+});
+
+var btnReset = document.getElementById("resetGame");
+btnReset.addEventListener("click",function(){
+	if(runningFlag){
+		pause();
+		runningFlag = false;
+	}
+	curCellNum = document.getElementById("originCellNum").value;
+	generationID = 0;
+	document.getElementById("generationID").innerHTML = "当前世代数:0";
+	document.getElementById("curCellNum").innerHTML = "当前活细胞数:"+curCellNum;
+	initMap();
+	generateLifeRan(curCellNum);
+	refreshCanvas();
+});
+
+var btnChange = document.getElementById("changeSpeed");
+btnChange.addEventListener("click",function(){
+	var tempSpeedRatio = document.getElementById("speedRatio").value;
+	if (tempSpeedRatio < 0.1 || tempSpeedRatio > 10) {
+		alert("变速系数须在0.1~10之间");
+	}
+	else{
+		speedRatio = tempSpeedRatio;
+	}
+});
+
+var btnResetTable = document.getElementById("changeTable");
+btnResetTable.addEventListener("click",function(){
+	if(runningFlag){
+		pause();
+		runningFlag = false;
+	};
+	generationID = 0;
+	document.getElementById("generationID").innerHTML = "当前世代数:0";
+	document.getElementById("curCellNum").innerHTML = "当前活细胞数:0";
+	mapWidth = document.getElementById("gridWidth").value;
+	mapHeight = document.getElementById("gridHeight").value;
+	createMap(mapWidth,mapHeight);
+	initMap();
+	var mainCanvas = document.getElementById("maintable");
+	mainCanvas.width = mapWidth*10;
+	mainCanvas.height = mapHeight*10;
+	refreshCanvas();
+});
+
+runningFlag = false;
+speedRatio = 1;
+generationID = 0;
+curCellNum = 1000;
+createMap(50,50);
+initMap();
+generateLifeRan(curCellNum);
+refreshCanvas();
+</script>
+
+</body>
+	
+</html>
