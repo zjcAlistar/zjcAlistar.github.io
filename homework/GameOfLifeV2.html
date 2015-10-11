@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>GameOfLife</title>
+<link rel="stylesheet" href="GameOfLife.css" type="text/css">
+</head>
+<body>
+<div id="mtitle">
+	<h1>生命游戏</h1>
+	<h2>By 竺俊超 曹竞鑫</h2>
+</div>
+<div id="controller">
+	<div>
+		<button id="startGame">开始</button>
+		<button id="pauseGame">暂停</button>
+		<button id="nextGeneration">下一代</button>
+	</div>
+	<div>
+		<input id="originCellNum" value="1000" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"></input>
+		<button id="resetGame" >重置</button>
+	</div>
+	<div>
+		<input id="speedRatio" value="1" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"></input>
+		<button id="changeSpeed">变速</button>
+	</div>
+	<div>高度
+		<select id="gridHeight">
+			<option value="25">25</option>
+			<option value="50" selected="selected">50</option>
+			<option value="100">100</option>
+		</select>
+		宽度
+		<select id="gridWidth">
+			<option value="25">25</option>
+			<option value="50" selected="selected">50</option>
+			<option value="100">100</option>
+			<option value="150">150</option>
+			<option value="200">200</option>
+		</select>
+		<button id="changeTable">重置地图</button>
+		<div id="generationID">当前世代数:0</div>
+		<div id="curCellNum">当前活细胞数:1000</div>
+	</div>	
+</div>
+	<canvas id="maintable" height="500px" width="500px"></canvas>
+<script type="text/javascript" src="GameOfLife.js"></script>
+</body>
+</html>
